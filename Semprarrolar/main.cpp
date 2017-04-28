@@ -1,15 +1,9 @@
 /*
-ADDED TO GITHUB
-PLZ NO TROLL
+COMENTÁRIOS IMPORTANTES:
 
-Faz as alterações e depois faz commit com um comentário do que alteraste.
 
-Acho que está pronto boyyy!
-HELLO MOTHERFUCKER
 
-ola puta
 */
-
 
 #include <iostream>
 #include <conio.h>

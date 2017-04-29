@@ -37,7 +37,7 @@ redo:
 			if (alterado_condutor || alterado_linha)
 			{
 				cout << "Pretende guardar as alterações? (Y/N)\n";
-			
+
 			erro3:
 				char input = _getch();
 
@@ -137,7 +137,7 @@ redo:
 	clearScreen();
 
 	cout << "---MENU LINHAS---\n";
-	
+
 	cout << "(1) Adicionar\n(2) Alterar\n(3) Remover\n";
 
 erro:
@@ -191,7 +191,7 @@ erro:
 	default:
 		goto erro;
 	}
-	
+
 	goto redo;
 }
 void MenuInformacao()
@@ -257,6 +257,10 @@ unsigned int inputErrorHandling(string input, char propriedade)
 	2 : Cancelar operação
 	*/
 
+	//Variável de validação no caso de ser uma paragem (case 'p')
+	//Se valid = true (no final de o loop em case 'p') significa que só é composta por números e não é aceitável
+	bool valid = true;
+
 	if (cin.eof() || input.length() == 0)
 	{
 		cin.clear();
@@ -281,9 +285,17 @@ unsigned int inputErrorHandling(string input, char propriedade)
 	case 'p':
 		for (size_t i = 0; i < input.length(); i++)
 		{
+			if (input.at(i) == ' ' || isdigit(input.at(i)))
+				valid = valid && true;
+			else
+				valid = false;
+
 			if (input.at(i) != ' ' && (!isalpha(input.at(i)) && !isdigit(input.at(i))))
 				return 0;
 		}
+		//Se valid = true significa que só é composta por números e não é aceitável
+		if (valid)
+			return 0;
 		break;
 	case 'n':
 		for (size_t i = 0; i < input.length(); i++)
@@ -361,7 +373,7 @@ vector<unsigned int> inputExist(string paragem)
 
 	for each (pair<unsigned int, Linha> var in empresa.getLinhas())
 	{
-		for (size_t i = 0; i < var.second.getParagens().size() ; i++)
+		for (size_t i = 0; i < var.second.getParagens().size(); i++)
 		{
 			if (compararCaseInsensitive(var.second.getParagens().at(i), paragem))
 			{

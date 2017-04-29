@@ -8,6 +8,7 @@
 
 #include "library.h"
 #include "global.h"
+#include "linha.h"
 
 using namespace std;
 
@@ -417,7 +418,16 @@ void Empresa::modifyLinha()
 	string input_id;
 	unsigned int l_id;
 
-	cout << " Que linha pretende alterar? ";
+	mapLinha lLinhas = empresa.getLinhas();
+
+	cout << "Linhas existentes:" << endl;
+
+	for (mapLinha::iterator i = lLinhas.begin(); i != lLinhas.end(); i++)
+	{
+		cout << i->second.getID() << endl;
+	}
+
+	cout << " \nQue linha pretende alterar? ";
 
 id:
 	getline(cin, input_id);
@@ -686,7 +696,16 @@ void Empresa::removeLinha()
 	string input_id;
 	unsigned int l_id, contador = 0;
 
-	cout << " Que linha pretende remover? ";
+	mapLinha lLinhas = empresa.getLinhas();
+
+	cout << "Linhas existentes:" << endl;
+
+	for (mapLinha::iterator i = lLinhas.begin(); i != lLinhas.end(); i++)
+	{
+		cout << i->second.getID() << endl;
+	}
+
+	cout << " \nQue linha pretende remover? ";
 
 id:
 	getline(cin, input_id);
@@ -896,7 +915,16 @@ void Empresa::modifyCondutor()
 	string input_id;
 	unsigned int c_id;
 
-	cout << " Que condutor pretende alterar? ";
+	mapCondutor cCondutores = empresa.getCondutores();
+
+	cout << "Condutores existentes:" << endl;
+
+	for (mapCondutor::iterator i = cCondutores.begin(); i != cCondutores.end(); i++)
+	{
+		cout << i->second.getID() << endl;
+	}
+
+	cout << " \nQue condutor pretende alterar? ";
 
 id:
 	getline(cin, input_id);
@@ -1165,7 +1193,16 @@ void Empresa::removeCondutor()
 	string input_id;
 	unsigned int c_id, contador = 0;
 
-	cout << " Que condutor pretende remover? ";
+	mapCondutor cCondutores = empresa.getCondutores();
+
+	cout << "Condutores existentes:" << endl;
+
+	for (mapCondutor::iterator i = cCondutores.begin(); i != cCondutores.end(); i++)
+	{
+		cout << i->second.getID() << endl;
+	}
+
+	cout << " \nQue condutor pretende remover? ";
 
 id:
 	getline(cin, input_id);
@@ -1210,7 +1247,16 @@ void Empresa::horarioLinha()
 	unsigned int l_id, direc;
 	string input_id;
 
-	cout << " Que linha pretende visualizar o horário? ";
+	mapLinha lLinhas = empresa.getLinhas();
+
+	cout << "Linhas existentes:" << endl;
+
+	for (mapLinha::iterator i = lLinhas.begin(); i != lLinhas.end(); i++)
+	{
+		cout << i->second.getID() << endl;
+	}
+
+	cout << " \nQue linha pretende visualizar o horário? ";
 
 id:
 	getline(cin, input_id);
@@ -1428,7 +1474,7 @@ paragem:
 		for (size_t a = 0; a < n_outp.size(); a++)
 		{
 			cout << " " << n_outp.at(a).showTempo();
-			
+
 			if (a < i_outp.size())
 				cout << setw(20) << i_outp.at(a).showTempo() << endl;
 		}
@@ -1451,7 +1497,7 @@ void Empresa::percursoParagem()
 	vector< vector<unsigned int> > linhasStartFinish;
 
 	cout << " Qual a paragem inicial? ";
-	
+
 paragem_inicial:
 	getline(cin, start);
 
@@ -1510,7 +1556,7 @@ paragem_final:
 			{
 				found_start = true;
 				index_start = y;
-			}		
+			}
 			else if (compararCaseInsensitive(i->second.getParagens().at(y), finish))
 			{
 				found_finish = true;

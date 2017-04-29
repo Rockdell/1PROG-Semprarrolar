@@ -1,12 +1,3 @@
-/*
-ADDED TO GITHUB
-PLZ NO TROLL
-
-Faz as alterações e depois faz commit com um comentário do que alteraste.
-
-*/
-
-
 #include <iostream>
 #include <conio.h>
 

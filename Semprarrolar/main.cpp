@@ -1,6 +1,8 @@
 /*
 COMENTÁRIOS IMPORTANTES:
 
+- Adicionar foreach em vez de for para fazer iterate nos maps
+- O showHorario vai para a library ou fica na empresa?
 
 
 */
@@ -18,9 +20,6 @@ const unsigned int H_INICIO = 8, M_INICIO = 0;
 const Tempo T_INICIO = { H_INICIO, M_INICIO };
 const unsigned int H_FIM = 12, M_FIM = 0;
 const Tempo T_FIM = { H_FIM, M_FIM };
-
-//Horas de um turno
-const int duracao_turno = 1;
 
 //Variáveis boleanas
 bool file_open = false;

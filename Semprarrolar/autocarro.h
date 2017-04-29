@@ -23,6 +23,8 @@ public:
 	unsigned int getOrdem() const;
 	vector<Trabalho> getTrabalho() const;
 
+	void showTrabalho();
+
 private:
 	unsigned int idLinha;
 	unsigned int idCondutor;

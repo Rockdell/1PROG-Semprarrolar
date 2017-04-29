@@ -202,7 +202,7 @@ redo:
 
 	cout << "---MENU INFORMAÇÂO---\n";
 
-	cout << " (1) Percurso entre duas paragens\n (2) Horário de uma linha\n (3) Horário de uma paragem\n\n";
+	cout << " (1) Percurso entre duas paragens\n (2) Horário de uma linha\n (3) Horário de uma paragem\n (4) Inquirir paragem\n\n";
 
 erro:
 	char input = _getch();
@@ -219,6 +219,9 @@ erro:
 		break;
 	case '3':
 		empresa.horarioParagem();
+		break;
+	case '4':
+		empresa.inquirirParagem();
 		break;
 	default:
 		goto erro;
@@ -319,20 +322,20 @@ bool inputExist(unsigned int id, char objeto)
 		return false;
 	}
 }
-bool inputExist(string paragem)
-{
-	mapLinha lLinhas = empresa.getLinhas();
-
-	for (mapLinha::iterator i = lLinhas.begin(); i != lLinhas.end(); i++)
-	{
-		for (size_t y = 0; y < i->second.getParagens().size(); y++)
-		{
-			if (compararCaseInsensitive(paragem, i->second.getParagens().at(y)))
-				return true;
-		}
-	}
-	return false;
-}
+//bool inputExist(string paragem)
+//{
+//	mapLinha lLinhas = empresa.getLinhas();
+//
+//	for (mapLinha::iterator i = lLinhas.begin(); i != lLinhas.end(); i++)
+//	{
+//		for (size_t y = 0; y < i->second.getParagens().size(); y++)
+//		{
+//			if (compararCaseInsensitive(paragem, i->second.getParagens().at(y)))
+//				return true;
+//		}
+//	}
+//	return false;
+//}
 bool inputExist(string paragem, vector<string> lista_paragens)
 {
 	for (size_t i = 0; i < lista_paragens.size(); i++)
@@ -342,4 +345,31 @@ bool inputExist(string paragem, vector<string> lista_paragens)
 	}
 
 	return false;
+}
+
+//void searchLinha()
+//{
+//
+//}
+//void searchCondutor()
+//{
+//
+//}
+vector<unsigned int> inputExist(string paragem)
+{
+	vector<unsigned int> result;
+
+	for each (pair<unsigned int, Linha> var in empresa.getLinhas())
+	{
+		for (size_t i = 0; i < var.second.getParagens().size() ; i++)
+		{
+			if (compararCaseInsensitive(var.second.getParagens().at(i), paragem))
+			{
+				result.push_back(var.first);
+				break;
+			}
+		}
+	}
+
+	return result;
 }

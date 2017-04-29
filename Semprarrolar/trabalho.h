@@ -21,6 +21,8 @@ public:
 	unsigned int getInicio() const;
 	unsigned int getFim() const;
 
+	void showTrabalho();
+
 private:
 	unsigned int idAutocarro;
 	unsigned int idCondutor;

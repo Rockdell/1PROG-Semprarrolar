@@ -1264,205 +1264,7 @@ erro:
 		goto erro;
 	}
 
-	//Tempo que demora a fazer um viagem (quer no sentido normal, quer no sentido inverso)
-	unsigned int sum = 0;
-	for (size_t i = 0; i < l.getTempos().size(); i++)
-	{
-		sum += l.getTempos().at(i);
-	}
-
-	Tempo actualNormal = T_INICIO;
-	Tempo actualInverso = T_INICIO; actualInverso.sumTempo(sum);
-
-	bool acabarPreencher = false;
-
-	//Vetores com os tempos iniciais dos dois sentidos
-	vector <Tempo> temposNormais; temposNormais.push_back(actualNormal);
-	vector <Tempo> temposInversos; temposInversos.push_back(actualInverso);
-
-	//Preencher vetores
-	while (!acabarPreencher)
-	{
-		actualNormal.sumTempo(l.getFreq());
-		actualInverso.sumTempo(l.getFreq());
-
-		if (actualNormal.getHora() > T_FIM.getHora() || (actualNormal.getHora() == T_FIM.getHora() && actualNormal.getMinuto() > T_FIM.getMinuto()))
-			acabarPreencher = true;
-		else
-			temposNormais.push_back(actualNormal);
-
-		if (actualInverso.getHora() > T_FIM.getHora() || (actualInverso.getHora() == T_FIM.getHora() && actualInverso.getMinuto() > T_FIM.getMinuto()))
-			acabarPreencher = true;
-		else
-			temposInversos.push_back(actualInverso);
-	}
-
-	//Vector com os tempos entre paragens (bi-direcional)
-	vector<unsigned int> temp_normal = l.getTempos(), temp_reverso = l.getTempos();
-	reverse(temp_reverso.begin(), temp_reverso.end());
-
-	//Vetor com elementos vetores (cada um com um conjunto de tempos ordenados a que se vai fazer output)
-	vector < vector <Tempo> > vectorOutput;
-
-	//Contadores
-	unsigned int p_index = 0;
-	unsigned int t_index = 0;
-
-	//Vetor com as valores para usar no setw (de modo a formatar o output conforme o número de carácteres das paragens)
-	vector<unsigned int> width;
-	unsigned int t_width = 0;
-
-	cout << endl << endl;
-
-	//Preencher vectorOutput com os tempos entre cada paragem, para todos as horas de saída da paragem inicial (numa direção)
-	switch (direc)
-	{
-	case 1:
-	{
-		for (size_t i = 0; i < temposNormais.size(); i++)
-		{
-			//Horas a que sai o autocarro da paragem inicial
-			Tempo time = temposNormais.at(i);
-
-			//Vetor temporario para guardar 1 linha que se vai fazer cout
-			vector <Tempo> normal;
-
-		next_n:
-			if (p_index == l.getParagens().size() - 1)
-			{
-				normal.push_back(time);
-				vectorOutput.push_back(normal);
-
-				t_index = 0;
-				p_index = 0;
-
-				continue;
-			}
-			else
-			{
-				normal.push_back(time);
-
-				time.sumTempo(temp_normal.at(t_index));
-
-				t_index++;
-				p_index++;
-
-				goto next_n;
-			}
-		}
-		
-		break;
-	}
-	case 2:
-	{
-		for (size_t i = 0; i < temposInversos.size(); i++)
-		{
-			//Horas a que sai o autocarro da paragem inicial
-			Tempo time = temposInversos.at(i);
-
-			//Vetor temporario para guardar 1 linha que se vai fazer cout
-			vector <Tempo> inverso;
-
-		next_i:
-			if (p_index == l.getParagens().size() - 1)
-			{
-				inverso.push_back(time);
-
-				vectorOutput.push_back(inverso);
-
-				t_index = 0;
-				p_index = 0;
-
-				continue;
-			}
-			else
-			{
-				inverso.push_back(time);
-
-				time.sumTempo(temp_reverso.at(t_index));
-
-				t_index++;
-				p_index++;
-
-				goto next_i;
-			}
-		}
-		
-		break;
-	}
-	}
-
-	//Output do header do horário
-	switch (direc)
-	{
-	case 1:
-	{
-		cout << " ";
-
-		for (size_t i = 0; i < l.getParagens().size(); i++)
-		{
-			if (i == l.getParagens().size() - 1)
-			{
-				cout << l.getParagens().at(i) << endl;
-				width.push_back(l.getParagens().at(i).length() + 5);
-			}
-			else
-			{
-				cout << l.getParagens().at(i) << "     ";
-				width.push_back(l.getParagens().at(i).length() + 5);
-			}
-		}
-
-		cout << endl;
-
-		break;
-	}
-	case 2:
-	{
-		vector<string> inv = l.getParagens();
-		reverse(inv.begin(), inv.end());
-
-		cout << " ";
-
-		for (size_t i = 0; i < inv.size(); i++)
-		{
-			if (i == inv.size() - 1)
-			{
-				cout << inv.at(i) << endl;
-				width.push_back(inv.at(i).length() + 5);
-			}
-			else
-			{
-				cout << inv.at(i) << "     ";
-				width.push_back(inv.at(i).length() + 5);
-			}
-		}
-
-		cout << endl;
-
-		break;
-	}
-	}
-
-	//Output dos tempos do vetor preenchido na função anterior
-	for (size_t x = 0; x < vectorOutput.size(); x++)
-	{
-		cout << " ";
-
-		for (size_t y = 0; y < vectorOutput.at(x).size(); y++)
-		{
-			if (y == vectorOutput.at(x).size() - 1)
-				cout << vectorOutput.at(x).at(y).showTempo() << endl;
-			else
-				cout << vectorOutput.at(x).at(y).showTempo() << setw(width.at(t_width));
-			t_width++;
-		}
-
-		//Renicializar o índice para ser usado na próxima hora de partida
-		t_width = 0;
-	}
-
-	_getch();
+	showHorario(l, direc);
 
 	return;
 
@@ -1495,7 +1297,7 @@ paragem:
 		return;
 	}
 
-	if (!inputExist(input_paragem))
+	if (inputExist(input_paragem).size() == 0)
 	{
 		cerr << " Essa paragem não existe. Escolha outra: ";
 		goto paragem;
@@ -1666,7 +1468,7 @@ paragem_inicial:
 		return;
 	}
 
-	if (!inputExist(start))
+	if (inputExist(start).size() == 0)
 	{
 		cerr << " A paragem não existe. Paragem inicial? ";
 		_getch();
@@ -1691,7 +1493,7 @@ paragem_final:
 		return;
 	}
 
-	if (!inputExist(finish))
+	if (inputExist(finish).size() == 0)
 	{
 		cerr << " A paragem não existe. Paragem final? ";
 		_getch();
@@ -1806,4 +1608,253 @@ paragem_final:
 	_getch();
 
 	return;
+}
+
+void Empresa::showHorario(Linha l, unsigned int sentido)
+{
+	//Tempo que demora a fazer um viagem (quer no sentido normal, quer no sentido inverso)
+	unsigned int sum = 0;
+	for (size_t i = 0; i < l.getTempos().size(); i++)
+	{
+		sum += l.getTempos().at(i);
+	}
+
+	Tempo actualNormal = T_INICIO;
+	Tempo actualInverso = T_INICIO; actualInverso.sumTempo(sum);
+
+	bool acabarPreencher = false;
+
+	//Vetores com os tempos iniciais dos dois sentidos
+	vector <Tempo> temposNormais; temposNormais.push_back(actualNormal);
+	vector <Tempo> temposInversos; temposInversos.push_back(actualInverso);
+
+	//Preencher vetores
+	while (!acabarPreencher)
+	{
+		actualNormal.sumTempo(l.getFreq());
+		actualInverso.sumTempo(l.getFreq());
+
+		if (actualNormal.getHora() > T_FIM.getHora() || (actualNormal.getHora() == T_FIM.getHora() && actualNormal.getMinuto() > T_FIM.getMinuto()))
+			acabarPreencher = true;
+		else
+			temposNormais.push_back(actualNormal);
+
+		if (actualInverso.getHora() > T_FIM.getHora() || (actualInverso.getHora() == T_FIM.getHora() && actualInverso.getMinuto() > T_FIM.getMinuto()))
+			acabarPreencher = true;
+		else
+			temposInversos.push_back(actualInverso);
+	}
+
+	//Vector com os tempos entre paragens (bi-direcional)
+	vector<unsigned int> temp_normal = l.getTempos(), temp_reverso = l.getTempos();
+	reverse(temp_reverso.begin(), temp_reverso.end());
+
+	//Vetor com elementos vetores (cada um com um conjunto de tempos ordenados a que se vai fazer output)
+	vector < vector <Tempo> > vectorOutput;
+
+	//Contadores
+	unsigned int p_index = 0;
+	unsigned int t_index = 0;
+
+	//Vetor com as valores para usar no setw (de modo a formatar o output conforme o número de carácteres das paragens)
+	vector<unsigned int> width;
+	unsigned int t_width = 0;
+
+	cout << endl << endl;
+
+	//Preencher vectorOutput com os tempos entre cada paragem, para todos as horas de saída da paragem inicial (numa direção)
+	switch (sentido)
+	{
+	case 1:
+	{
+		for (size_t i = 0; i < temposNormais.size(); i++)
+		{
+			//Horas a que sai o autocarro da paragem inicial
+			Tempo time = temposNormais.at(i);
+
+			//Vetor temporario para guardar 1 linha que se vai fazer cout
+			vector <Tempo> normal;
+
+		next_n:
+			if (p_index == l.getParagens().size() - 1)
+			{
+				normal.push_back(time);
+				vectorOutput.push_back(normal);
+
+				t_index = 0;
+				p_index = 0;
+
+				continue;
+			}
+			else
+			{
+				normal.push_back(time);
+
+				time.sumTempo(temp_normal.at(t_index));
+
+				t_index++;
+				p_index++;
+
+				goto next_n;
+			}
+		}
+
+		break;
+	}
+	case 2:
+	{
+		for (size_t i = 0; i < temposInversos.size(); i++)
+		{
+			//Horas a que sai o autocarro da paragem inicial
+			Tempo time = temposInversos.at(i);
+
+			//Vetor temporario para guardar 1 linha que se vai fazer cout
+			vector <Tempo> inverso;
+
+		next_i:
+			if (p_index == l.getParagens().size() - 1)
+			{
+				inverso.push_back(time);
+
+				vectorOutput.push_back(inverso);
+
+				t_index = 0;
+				p_index = 0;
+
+				continue;
+			}
+			else
+			{
+				inverso.push_back(time);
+
+				time.sumTempo(temp_reverso.at(t_index));
+
+				t_index++;
+				p_index++;
+
+				goto next_i;
+			}
+		}
+
+		break;
+	}
+	}
+
+	//Output do header do horário
+	switch (sentido)
+	{
+	case 1:
+	{
+		cout << " ";
+
+		for (size_t i = 0; i < l.getParagens().size(); i++)
+		{
+			if (i == l.getParagens().size() - 1)
+			{
+				cout << l.getParagens().at(i) << endl;
+				width.push_back(l.getParagens().at(i).length() + 5);
+			}
+			else
+			{
+				cout << l.getParagens().at(i) << "     ";
+				width.push_back(l.getParagens().at(i).length() + 5);
+			}
+		}
+
+		cout << endl;
+
+		break;
+	}
+	case 2:
+	{
+		vector<string> inv = l.getParagens();
+		reverse(inv.begin(), inv.end());
+
+		cout << " ";
+
+		for (size_t i = 0; i < inv.size(); i++)
+		{
+			if (i == inv.size() - 1)
+			{
+				cout << inv.at(i) << endl;
+				width.push_back(inv.at(i).length() + 5);
+			}
+			else
+			{
+				cout << inv.at(i) << "     ";
+				width.push_back(inv.at(i).length() + 5);
+			}
+		}
+
+		cout << endl;
+
+		break;
+	}
+	}
+
+	//Output dos tempos do vetor preenchido na função anterior
+	for (size_t x = 0; x < vectorOutput.size(); x++)
+	{
+		cout << " ";
+
+		for (size_t y = 0; y < vectorOutput.at(x).size(); y++)
+		{
+			if (y == vectorOutput.at(x).size() - 1)
+				cout << vectorOutput.at(x).at(y).showTempo() << endl;
+			else
+				cout << vectorOutput.at(x).at(y).showTempo() << setw(width.at(t_width));
+			t_width++;
+		}
+
+		//Renicializar o índice para ser usado na próxima hora de partida
+		t_width = 0;
+	}
+
+	_getch();
+
+	return;
+}
+
+void Empresa::inquirirParagem()
+{
+	//Linhas que incluem a paragem
+	string input_paragem;
+	vector<unsigned int> linhas_com_paragem;
+
+	cout << endl << " Qual paragem pretende procurar? ";
+
+input:
+	getline(cin, input_paragem);
+
+	switch (inputErrorHandling(input_paragem, 'p'))
+	{
+	case 0:
+		cerr << "Input inválido. Paragem que pretende procurar? ";
+		goto input;
+	case 1:
+		break;
+	case 2:
+		cerr << "Operação cancelada.\n";
+		_getch();
+		return;
+	}
+
+	linhas_com_paragem = inputExist(input_paragem);
+
+	if (linhas_com_paragem.size() == 0)
+		cerr << " Nenhuma linha contém esta paragem.\n";
+	else
+	{
+		cout << endl << " Linhas com a paragem: " << endl;
+
+		for (size_t i = 0; i < linhas_com_paragem.size(); i++)
+		{
+			cout << "> " << linhas_com_paragem.at(i) << endl;
+		}
+	}
+
+	_getch();
+
+	return;
+
 }

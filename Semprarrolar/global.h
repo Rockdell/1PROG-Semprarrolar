@@ -19,8 +19,6 @@ extern bool alterado_condutor;
 extern bool alterado_linha;
 extern bool alterado;
 
-extern const int duracao_turno;
-
 extern Empresa empresa;
 
 #endif

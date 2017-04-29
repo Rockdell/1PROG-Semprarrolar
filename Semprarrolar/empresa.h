@@ -47,6 +47,11 @@ public:
 	void horarioParagem();
 	void percursoParagem();
 
+	//Display do horário da linha (a ser usado pelo horarioLinha e pelo ponto 7 do trabalho)
+	void showHorario(Linha l, unsigned int direcao);
+
+	void inquirirParagem();
+
 private:
 	mapCondutor listaCondutores;
 	mapLinha listaLinhas;

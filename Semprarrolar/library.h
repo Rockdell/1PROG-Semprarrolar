@@ -16,7 +16,10 @@ void MenuInformacao();
 bool compararCaseInsensitive(string strFirst, string strSecond);
 unsigned int inputErrorHandling(string input, char propriedade);
 bool inputExist(unsigned int propriedade, char objeto);
-bool inputExist(string paragem);
+vector<unsigned int> inputExist(string paragem);
 bool inputExist(string paragem, vector<string> lista_paragens);
+
+//void searchLinha();
+//void searchCondutor();
 
 #endif

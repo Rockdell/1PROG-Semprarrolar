@@ -28,6 +28,8 @@ public:
 	unsigned int getDescanso() const;
 	vector<Trabalho> getTrabalho() const;
 
+	void showCondutor();
+
 private:
 	unsigned int idCondutor;
 	string nomeCondutor;

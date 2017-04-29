@@ -24,6 +24,8 @@ public:
 	vector<unsigned int> getTempos() const;
 	unsigned int getAutocarros() const;
 
+	void showLinha();
+
 private:
 	unsigned int idLinha;
 	unsigned int frequenciaLinha;

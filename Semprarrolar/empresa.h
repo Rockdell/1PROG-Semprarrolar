@@ -48,6 +48,7 @@ public:
 
 	void infoLinha();
 	void infoTrabalho();
+	//void infoAutocarro();
 
 private:
 	mapCondutor listaCondutores;

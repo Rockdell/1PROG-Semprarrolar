@@ -13,17 +13,18 @@ public:
 	Autocarro();
 	Autocarro(unsigned int linhaid, unsigned int condutorid, unsigned int ordem, vector<Trabalho> turnos);
 
+	void setOrdem(unsigned int ordem);
 	void setLinhaID(unsigned int linhaid);
 	void setCondutorID(unsigned int condutorid);
-	void setOrdem(unsigned int ordem);
 	void setTrabalho(vector<Trabalho> turnos);
 	
+	unsigned int getOrdem() const;
 	unsigned int getLinhaID() const;
 	unsigned int getCondutorID() const;
-	unsigned int getOrdem() const;
 	vector<Trabalho> getTrabalho() const;
 
-	void showTrabalho();
+	//void showAutocarros();
+	//void showTrabalho();
 
 private:
 	unsigned int idLinha;

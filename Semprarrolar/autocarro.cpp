@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "autocarro.h"
 
 using namespace std;
@@ -17,6 +19,10 @@ Autocarro::Autocarro(unsigned int linhaid, unsigned int condutorid, unsigned int
 	this->trabalhoAutocarro = turnos;
 }
 
+void Autocarro::setOrdem(unsigned int ordem)
+{
+	this->ordemAutocarro = ordem;
+}
 void Autocarro::setLinhaID(unsigned int linhaid)
 {
 	this->idLinha = linhaid;
@@ -25,15 +31,15 @@ void Autocarro::setCondutorID(unsigned int condutorid)
 {
 	this->idCondutor = condutorid;
 }
-void Autocarro::setOrdem(unsigned int ordem)
-{
-	this->ordemAutocarro = ordem;
-}
 void Autocarro::setTrabalho(vector<Trabalho> turnos)
 {
 	this->trabalhoAutocarro = turnos;
 }
 
+unsigned int Autocarro::getOrdem() const
+{
+	return ordemAutocarro;
+}
 unsigned int Autocarro::getLinhaID() const
 {
 	return idLinha;
@@ -42,11 +48,16 @@ unsigned int Autocarro::getCondutorID() const
 {
 	return idCondutor;
 }
-unsigned int Autocarro::getOrdem() const
-{
-	return ordemAutocarro;
-}
 vector<Trabalho> Autocarro::getTrabalho() const
 {
 	return trabalhoAutocarro;
 }
+
+/*void Autocarro::showAutocarros()
+{
+	cout << endl << " Autocarro:\n" << " Ordem: " << this->ordemAutocarro <<
+		"\n	Linha: " << this->idLinha <<
+		"\n Condutor: " << this->idCondutor << endl << endl;
+
+	return;
+}*/

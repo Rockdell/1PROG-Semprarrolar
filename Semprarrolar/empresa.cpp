@@ -1776,3 +1776,8 @@ id:
 
 	return;
 }
+/*void Empresa::infoAutocarro()
+{
+
+}
+*/

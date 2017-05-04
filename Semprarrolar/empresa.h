@@ -41,6 +41,7 @@ public:
 	void createCondutor();
 	void modifyCondutor();
 	void removeCondutor();
+	void workCondutor();
 
 	//Horários
 	void horarioLinha();

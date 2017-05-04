@@ -172,7 +172,7 @@ redo:
 
 	cout << "---MENU CONDUTORES---\n";
 
-	cout << "(1) Adicionar\n(2) Alterar\n(3) Remover\n(4) Visualizar trabalho\n";
+	cout << "(1) Adicionar\n(2) Alterar\n(3) Remover\n(4) Visualizar trabalho\n(5) Visualizar horas semanais\n";
 
 erro:
 	char input = _getch();
@@ -192,6 +192,9 @@ erro:
 		break;
 	case '4':
 		empresa.infoTrabalho();
+		break;
+	case '5':
+		empresa.infoService();
 		break;
 	default:
 		goto erro;

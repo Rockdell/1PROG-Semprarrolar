@@ -58,3 +58,12 @@ void Tempo::sumTempo(unsigned int m)
 		this->setMinuto(this->getMinuto() - 60);
 	}
 }
+unsigned int Tempo::subtractTempo(Tempo t)
+{
+	unsigned int result_minutos;
+
+	result_minutos = (this->hora + t.getHora()) * 60;
+	result_minutos += this->minuto + t.getMinuto();
+
+	return result_minutos;
+}

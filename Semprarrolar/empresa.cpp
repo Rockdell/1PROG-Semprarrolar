@@ -453,7 +453,7 @@ id:
 		cerr << " Essa linha não existe. Escolha outro: ";
 		goto id;
 	}
-	
+
 	mapLinha newLinhas = empresa.getLinhas();
 
 	mapLinha::iterator it = newLinhas.find(l_id);
@@ -1776,6 +1776,52 @@ id:
 
 	return;
 }
+void Empresa::infoService()
+{
+	mapCondutor temp_c = empresa.getCondutores();
+	cout << endl;
+	for (mapCondutor::iterator i = temp_c.begin(); i != temp_c.end(); i++)
+	{
+		vector<Trabalho> temp_trab = i->second.getTrabalho();
+
+		cout << i->second.getNome() << " - ";
+
+		if (temp_trab.size() == 0)
+		{
+			cout << "Condutor sem trabalho atribuido!";
+			goto fim;
+		}
+
+		unsigned int total = 0;
+
+		for (int n = 0; n < temp_trab.size(); n++)
+		{
+			Tempo inicio = temp_trab.at(n).getInicio();
+			Tempo fim = temp_trab.at(n).getFim();
+
+			total += inicio.subtractTempo(fim);
+		}
+
+		int min_semana = i->second.getSemana() * 60;
+
+		if (total == min_semana)
+		{
+			cout << "Semana Completa!";
+		}
+		else if (total < min_semana)
+		{
+			cout << "Faltam " << (min_semana - total) / 60 << " horas (" << min_semana - total << " minutos) para completar a semana.";
+		}
+		else
+		{
+			cerr << "Demasiadas horas por semana!!!";
+		}
+
+	fim: cout << endl;
+	}
+	_getch();
+}
+
 /*void Empresa::infoAutocarro()
 {
 

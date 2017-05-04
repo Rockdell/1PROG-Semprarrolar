@@ -19,6 +19,7 @@ public:
 
 	string showTempo() const;
 	void sumTempo(unsigned int m);
+	unsigned int subtractTempo(Tempo t);
 
 private:
 	int hora;

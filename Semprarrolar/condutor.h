@@ -29,7 +29,7 @@ public:
 	vector<Trabalho> getTrabalho() const;
 
 	void showCondutor();
-	void workCondutor();
+	void showTrabalho();
 
 private:
 	unsigned int idCondutor;

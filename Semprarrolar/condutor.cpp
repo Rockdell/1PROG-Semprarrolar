@@ -1,4 +1,6 @@
 #include <iostream>
+#include <conio.h>
+
 #include "condutor.h"
 #include "trabalho.h"
 
@@ -21,27 +23,6 @@ Condutor::Condutor(unsigned int id, string nome, unsigned int hturno, unsigned i
 	this->hsemanaCondutor = hsemana;
 	this->hdescansoCondutor = hdescanso;
 	this->trabalhoCondutor = turnos;
-}
-
-void Condutor::workCondutor()
-{
-	vector<Trabalho> trab = this->trabalhoCondutor;
-
-	if (trab.size() == 0)
-	{
-		cout << "Condutor nao tem nenhum trabalho atribuido!" << endl;
-	}
-	else
-	{
-		cout << "\nTrabalho atribuido ao condutor " << this->nomeCondutor << " :" << endl << endl;
-
-		for (int i = 0; i < trab.size(); i++)
-		{
-			Trabalho temp = trab.at(i);
-			cout << "De " << temp.getInicio().showTempo() << " a " << temp.getFim().showTempo() << endl;
-			cout << "Conduz o autocarro de ordem " << temp.getAutocarroID() << endl;
-		}
-	}
 }
 
 void Condutor::setID(unsigned int id)
@@ -92,4 +73,38 @@ unsigned int Condutor::getDescanso() const
 vector<Trabalho> Condutor::getTrabalho() const
 {
 	return trabalhoCondutor;
+}
+
+void Condutor::showCondutor()
+{
+	cout << endl << " Condutor:\n" << " ID: " << this->idCondutor <<
+		"\n Nome: " << this->nomeCondutor <<
+		"\n Horas turno: " << this->hturnoCondutor <<
+		"\n Horas semanais: " << this->hsemanaCondutor <<
+		"\n Horas de descanso: " << this->hdescansoCondutor <<
+		"\n Trabalho: "; this->showTrabalho(); cout << endl << endl;
+}
+void Condutor::showTrabalho()
+{
+	vector<Trabalho> trab = this->trabalhoCondutor;
+
+	if (trab.size() == 0)
+	{
+		cout << "Condutor não tem nenhum trabalho atribuido!" << endl;
+	}
+	else
+	{
+		cout << "\nTrabalho atribuido ao condutor " << this->nomeCondutor << " :" << endl << endl;
+
+		for (int i = 0; i < trab.size(); i++)
+		{
+			Trabalho temp = trab.at(i);
+			cout << "De " << temp.getInicio().showTempo() << " a " << temp.getFim().showTempo() << endl;
+			cout << "Conduz o autocarro de ordem " << temp.getAutocarroID() << endl;
+		}
+	}
+
+	_getch();
+
+	return;
 }

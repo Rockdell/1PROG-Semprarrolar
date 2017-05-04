@@ -191,7 +191,7 @@ erro:
 		empresa.removeCondutor();
 		break;
 	case '4':
-		empresa.workCondutor();
+		empresa.infoTrabalho();
 		break;
 	default:
 		goto erro;

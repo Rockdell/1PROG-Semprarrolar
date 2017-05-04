@@ -19,12 +19,14 @@ using namespace std;
 
 //Horário de um dia de trabalho
 const unsigned int H_INICIO = 8, M_INICIO = 0;
-const Tempo T_INICIO = { H_INICIO, M_INICIO };
+const Tempo T_INICIO = Tempo(H_INICIO, M_INICIO);
 const unsigned int H_FIM = 12, M_FIM = 0;
-const Tempo T_FIM = { H_FIM, M_FIM };
+const Tempo T_FIM = Tempo(H_FIM, M_FIM);
 
 //Variáveis boleanas
 bool file_open = false;
+bool day_open = false;
+
 bool alterado_condutor = false;
 bool alterado_linha = false;
 bool alterado;

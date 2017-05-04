@@ -3,14 +3,19 @@
 
 #include <map>
 #include <vector>
+#include <string>
 
 #include "linha.h"
 #include "condutor.h"
+#include "autocarro.h"
 
 using namespace std;
 
 typedef map <unsigned int, Condutor> mapCondutor;
 typedef map <unsigned int, Linha> mapLinha;
+
+typedef map<unsigned int, Autocarro> mapAutocarro;
+typedef map<unsigned int, mapAutocarro> mapTrabalho;
 
 class Empresa
 {
@@ -19,9 +24,11 @@ public:
 
 	void setCondutores(mapCondutor lcondutores);
 	void setLinhas(mapLinha llinhas);
+	void setTrabalho(vector<mapTrabalho> vtrabalho);
 
 	mapCondutor getCondutores() const;
 	mapLinha getLinhas() const;
+	vector<mapTrabalho> getTrabalho() const;
 
 	void fillCondutores(string filename);
 	void fillLinhas(string filename);
@@ -53,6 +60,17 @@ public:
 private:
 	mapCondutor listaCondutores;
 	mapLinha listaLinhas;
+	vector<mapTrabalho> vectorTrabalho;
+	
+	/*
+	0 - segunda
+	1 - terça
+	2 - quarta
+	3 - quinta
+	4 - sexta
+	5 - sabado
+	6 - domingo
+	*/
 
 };
 

@@ -3,6 +3,7 @@
 #include <string>
 #include <algorithm>
 #include <iomanip>
+#include <sstream>
 
 #include "linha.h"
 #include "library.h"
@@ -27,7 +28,7 @@ redo:
 
 	if (file_open)
 	{
-		cout << "(1) Linhas\n(2) Condutores\n(3) Informação\n";
+		cout << "(1) Linhas\n(2) Condutores\n(3) Informação\n(4) Atribuição de trabalho\n";
 
 	erro1:
 		char input = _getch();
@@ -89,6 +90,9 @@ redo:
 			break;
 		case '3':
 			MenuInformacao();
+			break;
+		case '4':
+			MenuAtribuicao();
 			break;
 		default:
 			goto erro1;
@@ -238,6 +242,206 @@ erro:
 
 	goto redo;
 }
+void MenuAtribuicao()
+{
+	beginAtribuicao();
+
+	unsigned int index = 0;
+	string dia_da_semana;
+
+redo:
+
+	clearScreen();
+	cout << "---MENU ATRIBUIÇÃO---\n";
+
+	if (!day_open)
+	{
+		cout << " Que dia da semana pretende selecionar? ";
+		cout << "\n (1) Segunda-feira\n (2) Terça-feira\n (3) Quarta-feira\n (4) Quinta-feira\n (5) Sexta-feira\n (6) Sábado\n (7) Domingo\n\n";
+
+	erro1:
+		char input = _getch();
+
+		switch (input)
+		{
+		case '0':
+			return;
+		case '1':
+			dia_da_semana = "Segunda-feira";
+			index = 0;
+			break;
+		case '2':
+			dia_da_semana = "Terça-feira";
+			index = 1;
+			break;
+		case '3':
+			dia_da_semana = "Quarta-feira";
+			index = 2;
+			break;
+		case '4':
+			dia_da_semana = "Quinta-feira";
+			index = 3;
+			break;
+		case '5':
+			dia_da_semana = "Sexta-feira";
+			index = 4;
+			break;
+		case '6':
+			dia_da_semana = "Sábado";
+			index = 5;
+			break;
+		case '7':
+			dia_da_semana = "Domingo";
+			index = 6;
+			break;
+		default:
+			goto erro1;
+		}
+
+		day_open = true;
+
+		goto redo;
+	}
+	else
+	{
+		string input_id;
+		string input_autocarro;
+		string input_condutor;
+		unsigned int l_id;
+		unsigned int auto_id;
+		unsigned int c_id;
+
+		//Dia da semana
+		cout << "\n " << dia_da_semana << endl << endl;
+
+		//Map da com as linhas e os autocarros de cada linha
+		mapTrabalho	linhas_com_autocarros = empresa.getTrabalho().at(index);
+
+		//Linhas existentes
+		mapLinha lLinhas = empresa.getLinhas();
+
+		cout << "Linhas existentes:" << endl;
+
+		for (mapLinha::iterator i = lLinhas.begin(); i != lLinhas.end(); i++)
+		{
+			cout << i->second.getID() << endl;
+		}
+
+		cout << " \nQue linha pretende selecionar? ";
+
+	id:
+		getline(cin, input_id);
+
+		switch (inputErrorHandling(input_id, 'i'))
+		{
+		case 0:
+			cerr << "Input inválido. Introduza novamente:";
+			goto id;
+		case 1:
+			break;
+		case 2:
+		{
+			cerr << "Operação cancelada.\n";
+
+			vector<mapTrabalho> resetTrabalho(7);
+			empresa.setTrabalho(resetTrabalho);
+			_getch();
+			return;
+		}
+		}
+
+		istringstream stream_id(input_id);
+		stream_id >> l_id;
+
+		if (!inputExist(l_id, 'l'))
+		{
+			cerr << " Essa linha não existe. Escolha outro: ";
+			goto id;
+		}
+
+		mapAutocarro autocarros_da_linha = linhas_com_autocarros[l_id];
+
+		cout << "\n Linha: " << l_id << endl;
+
+		//Output dos autocarros da linha desse dia
+		for (mapAutocarro::iterator it = autocarros_da_linha.begin(); it != autocarros_da_linha.end(); it++)
+		{
+			Autocarro ac = it->second;
+			cout << " Autocarro - número " << it->first << ":\n";
+			cout << " Turno: " << ac.getTrabalho().getInicio().showTempo() << " às " << ac.getTrabalho().getFim().showTempo() << endl;
+			
+			if (ac.getCondutorID() == 0)
+				cout << " Condutor atribuído: NULL " << endl << endl;
+			else
+				cout << " Condutor atribuído: " << empresa.getCondutores()[ac.getCondutorID()].getNome() << endl << endl;
+		}
+
+		cout << " A que autocarro pretende atribuir o condutor? ";
+
+	autocarro:
+		getline(cin, input_autocarro);
+
+		switch (inputErrorHandling(input_autocarro, 'i'))
+		{
+		case 0:
+			cerr << "Input inválido. Introduza novamente:";
+			goto autocarro;
+		case 1:
+			break;
+		case 2:
+			cerr << "Operação cancelada.\n";
+			_getch();
+			return;
+		}
+
+		istringstream stream_autocarro(input_autocarro);
+		stream_autocarro >> auto_id;
+
+		//Autocarro existe?
+		if (auto_id < 1 || auto_id > autocarros_da_linha.rbegin()->first)
+		{
+			cerr << " Esse autocarro não existe. Escolha outro: ";
+			goto autocarro;
+		}
+
+		cout << " Que condutor pretende atribuir o trabalho? ";
+
+	condutor:
+		getline(cin, input_condutor);
+
+		switch (inputErrorHandling(input_condutor, 'i'))
+		{
+		case 0:
+			cerr << "Input inválido. Introduza novamente:";
+			goto condutor;
+		case 1:
+			break;
+		case 2:
+			cerr << "Operação cancelada.\n";
+			_getch();
+			return;
+		}
+
+		istringstream stream_condutor(input_condutor);
+		stream_condutor >> c_id;
+
+		if (!inputExist(c_id, 'c'))
+		{
+			cerr << " Esse condutor não existe. Escolha outro: ";
+			goto condutor;
+		}
+
+		cout << " Até este ponto, o condutor é válido, o autocarro é válido. Falta confirmar se é possível atribuir o trabalho ao condutor!|\n\n";
+	}
+
+	_getch();
+
+	day_open = false;
+	index = 0;
+	dia_da_semana = "";
+
+	goto redo;
+}
 
 //QoL methods
 bool compararCaseInsensitive(string strFirst, string strSecond)
@@ -370,4 +574,73 @@ vector<unsigned int> inputExist(string paragem)
 	}
 
 	return result;
+}
+
+void beginAtribuicao()
+{
+	mapLinha linhas_existentes = empresa.getLinhas();
+
+	vector<mapTrabalho> newVector;
+
+	//Para cada dia da semana
+	for (size_t i = 0; i <= 7; i++)
+	{
+		mapTrabalho newTrabalho;
+
+		//Para cada linha do dia
+		for (mapLinha::iterator it = linhas_existentes.begin(); it != linhas_existentes.end() ; it++)
+		{
+			mapAutocarro newAutocarros;
+
+			//Hora de inicio
+			Tempo actual = T_INICIO;
+			bool acabarPreencher = false;
+
+			unsigned int nr_autocarros = 0;
+			unsigned int tempo_ida_volta = 0;
+			vector<Tempo> tempos_saida; tempos_saida.push_back(actual);
+
+			//Número de autocarros e hora de saída
+			while (true)
+			{
+				actual.sumTempo(empresa.getLinhas()[it->first].getFreq());
+
+				if (actual.getHora() > T_FIM.getHora() || (actual.getHora() == T_FIM.getHora() && actual.getMinuto() > T_FIM.getMinuto()))
+					break;
+				else
+				{
+					tempos_saida.push_back(actual);
+					nr_autocarros++;
+				}
+			}
+			
+			//Tempo que o autocarro demora a ir e vir
+			for (size_t a = 0; a < empresa.getLinhas()[it->first].getTempos().size(); a++)
+			{
+				tempo_ida_volta += empresa.getLinhas()[it->first].getTempos().at(a);
+			}
+			tempo_ida_volta *= 2;
+
+			//Preencher newAutocarro
+			for (size_t c = 1; c <= nr_autocarros; c++)
+			{
+				//Inicio e fim do turno
+				Tempo inicio = tempos_saida.at(c - 1);
+				Tempo fim = inicio;
+				fim.sumTempo(tempo_ida_volta);
+
+				Trabalho turno = Trabalho(tempos_saida.at(c - 1), fim);
+				Autocarro ac = Autocarro(it->first, 0, c, turno);
+				newAutocarros[c] = ac;
+			}
+
+			newTrabalho[it->first] = newAutocarros;
+		}
+
+		newVector.push_back(newTrabalho);
+	}
+
+	empresa.setTrabalho(newVector);
+
+	return;
 }

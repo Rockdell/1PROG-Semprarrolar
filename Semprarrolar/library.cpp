@@ -172,7 +172,7 @@ redo:
 
 	cout << "---MENU CONDUTORES---\n";
 
-	cout << "(1) Adicionar\n(2) Alterar\n(3) Remover\n";
+	cout << "(1) Adicionar\n(2) Alterar\n(3) Remover\n(4) Visualizar trabalho\n";
 
 erro:
 	char input = _getch();
@@ -189,6 +189,9 @@ erro:
 		break;
 	case '3':
 		empresa.removeCondutor();
+		break;
+	case '4':
+		empresa.workCondutor();
 		break;
 	default:
 		goto erro;

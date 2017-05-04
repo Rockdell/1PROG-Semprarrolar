@@ -38,6 +38,10 @@
     <ClCompile Include="tempo.cpp" />
     <ClCompile Include="trabalho.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\..\Desktop\Info\c.txt" />
+    <Text Include="..\..\..\..\Desktop\Info\l.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D651596C-507A-482A-9B10-55B1C08A20BC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

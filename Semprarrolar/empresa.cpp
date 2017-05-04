@@ -1215,6 +1215,54 @@ id:
 
 	return;
 }
+void Empresa::workCondutor()
+{
+	string input_id;
+	unsigned int c_id, contador = 0;
+
+	mapCondutor cCondutores = empresa.getCondutores();
+
+	cout << "Condutores existentes:" << endl;
+
+	for (mapCondutor::iterator i = cCondutores.begin(); i != cCondutores.end(); i++)
+	{
+		cout << i->second.getID() << endl;
+	}
+
+	cout << " \nPretende visualizar o trabalho de qual condutor? ";
+
+id:
+	getline(cin, input_id);
+
+	switch (inputErrorHandling(input_id, 'i'))
+	{
+	case 0:
+		cerr << "Input inválido. Introduza novamente:";
+		goto id;
+	case 1:
+		break;
+	case 2:
+		cerr << "Operação cancelada.\n";
+		_getch();
+		return;
+	}
+
+	istringstream stream_id(input_id);
+	stream_id >> c_id;
+
+	if (!inputExist(c_id, 'c'))
+	{
+		cerr << " Esse condutor não existe. Escolha outro: ";
+		goto id;
+	}
+
+	mapCondutor newCondutores = empresa.getCondutores();
+	Condutor l = newCondutores[c_id];
+	l.workCondutor();
+	_getch();
+
+	return;
+}
 
 void Empresa::horarioLinha()
 {

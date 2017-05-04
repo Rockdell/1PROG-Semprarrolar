@@ -29,6 +29,7 @@ public:
 	vector<Trabalho> getTrabalho() const;
 
 	void showCondutor();
+	void workCondutor();
 
 private:
 	unsigned int idCondutor;

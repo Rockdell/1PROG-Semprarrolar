@@ -1,4 +1,5 @@
 #include "trabalho.h"
+#include "tempo.h"
 
 using namespace std;
 
@@ -6,10 +7,10 @@ Trabalho::Trabalho()
 {
 	this->idAutocarro = 0;
 	this->idCondutor = 0;
-	this->inicioTrabalho = 0;
-	this->fimTrabalho = 0;
+	this->inicioTrabalho = Tempo();
+	this->fimTrabalho = Tempo();
 }
-Trabalho::Trabalho(unsigned int autocarroid, unsigned int condutorid, unsigned int inicio, unsigned int fim)
+Trabalho::Trabalho(unsigned int autocarroid, unsigned int condutorid, Tempo inicio, Tempo fim)
 {
 	this->idAutocarro = autocarroid;
 	this->idCondutor = condutorid;
@@ -25,11 +26,11 @@ void Trabalho::setCondutorID(unsigned int condutorid)
 {
 	this->idCondutor = condutorid;
 }
-void Trabalho::setInicio(unsigned int inicio)
+void Trabalho::setInicio(Tempo inicio)
 {
 	this->inicioTrabalho = inicio;
 }
-void Trabalho::setFim(unsigned int fim)
+void Trabalho::setFim(Tempo fim)
 {
 	this->fimTrabalho = fim;
 }
@@ -42,11 +43,11 @@ unsigned int Trabalho::getCondutorID() const
 {
 	return idCondutor;
 }
-unsigned int Trabalho::getInicio() const
+Tempo Trabalho::getInicio() const
 {
 	return inicioTrabalho;
 }
-unsigned int Trabalho::getFim() const
+Tempo Trabalho::getFim() const
 {
 	return fimTrabalho;
 }

@@ -9,25 +9,25 @@ class Trabalho
 {
 public:
 	Trabalho();
-	Trabalho(unsigned int autocarroid, unsigned int condutorid, unsigned int inicio, unsigned int fim);
+	Trabalho(unsigned int autocarroid, unsigned int condutorid, Tempo inicio, Tempo fim);
 
 	void setAutocarroID(unsigned int autocarroid);
 	void setCondutorID(unsigned int condutorid);
-	void setInicio(unsigned int inicio);
-	void setFim(unsigned int fim);
+	void setInicio(Tempo inicio);
+	void setFim(Tempo fim);
 
 	unsigned int getAutocarroID() const;
 	unsigned int getCondutorID() const;
-	unsigned int getInicio() const;
-	unsigned int getFim() const;
+	Tempo getInicio() const;
+	Tempo getFim() const;
 
 	void showTrabalho();
 
 private:
 	unsigned int idAutocarro;
 	unsigned int idCondutor;
-	unsigned int inicioTrabalho;
-	unsigned int fimTrabalho;
+	Tempo inicioTrabalho;
+	Tempo fimTrabalho;
 
 };
 

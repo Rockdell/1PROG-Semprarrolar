@@ -2,7 +2,9 @@
 #include <conio.h>
 #include <string>
 #include <algorithm>
+#include <iomanip>
 
+#include "linha.h"
 #include "library.h"
 #include "global.h"
 
@@ -202,7 +204,8 @@ redo:
 
 	cout << "---MENU INFORMAÇÂO---\n";
 
-	cout << " (1) Percurso entre duas paragens\n (2) Horário de uma linha\n (3) Horário de uma paragem\n (4) Inquirir paragem\n\n";
+	cout << " (1) Percurso entre duas paragens\n (2) Horário de uma linha\n (3) Horário de uma paragem\n (4) Inquirir paragem\n " <<
+		"(5) Informação de uma linha\n (6) Informação de um autocarro\n\n";
 
 erro:
 	char input = _getch();
@@ -222,6 +225,9 @@ erro:
 		break;
 	case '4':
 		empresa.inquirirParagem();
+		break;
+	case '5':
+		empresa.infoLinha();
 		break;
 	default:
 		goto erro;
@@ -334,20 +340,6 @@ bool inputExist(unsigned int id, char objeto)
 		return false;
 	}
 }
-//bool inputExist(string paragem)
-//{
-//	mapLinha lLinhas = empresa.getLinhas();
-//
-//	for (mapLinha::iterator i = lLinhas.begin(); i != lLinhas.end(); i++)
-//	{
-//		for (size_t y = 0; y < i->second.getParagens().size(); y++)
-//		{
-//			if (compararCaseInsensitive(paragem, i->second.getParagens().at(y)))
-//				return true;
-//		}
-//	}
-//	return false;
-//}
 bool inputExist(string paragem, vector<string> lista_paragens)
 {
 	for (size_t i = 0; i < lista_paragens.size(); i++)

@@ -6,6 +6,8 @@
 
 using namespace std;
 
+#include "linha.h"
+
 class Linha
 {
 public:
@@ -25,6 +27,7 @@ public:
 	unsigned int getAutocarros() const;
 
 	void showLinha();
+	void showHorario(unsigned int sentido);
 
 private:
 	unsigned int idLinha;

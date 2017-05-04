@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "condutor.h"
 
 using namespace std;
@@ -69,4 +71,13 @@ unsigned int Condutor::getDescanso() const
 vector<Trabalho> Condutor::getTrabalho() const
 {
 	return trabalhoCondutor;
+}
+
+void Condutor::showCondutor()
+{
+	cout << endl << " Condutor:\n" << " ID: " << this->idCondutor <<
+		"\n Nome: " << this->nomeCondutor <<
+		"\n Horas turno: " << this->hturnoCondutor <<
+		"\n Horas semanais: " << this->hsemanaCondutor <<
+		"\n Horas de descanso: " << this->hdescansoCondutor << endl << endl;
 }

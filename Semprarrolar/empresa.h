@@ -3,12 +3,9 @@
 
 #include <map>
 #include <vector>
-#include <locale>
-#include <clocale>
 
-#include "condutor.h"
 #include "linha.h"
-#include "tempo.h"
+#include "condutor.h"
 
 using namespace std;
 
@@ -47,10 +44,9 @@ public:
 	void horarioParagem();
 	void percursoParagem();
 
-	//Display do horário da linha (a ser usado pelo horarioLinha e pelo ponto 7 do trabalho)
-	void showHorario(Linha l, unsigned int direcao);
-
 	void inquirirParagem();
+
+	void infoLinha();
 
 private:
 	mapCondutor listaCondutores;

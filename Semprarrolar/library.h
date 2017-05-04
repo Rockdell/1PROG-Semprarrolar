@@ -1,6 +1,7 @@
 #ifndef LIBRARY_H
 #define LIBRARY_H
 
+#include "global.h"
 #include <string>
 #include <vector>
 
@@ -18,8 +19,5 @@ unsigned int inputErrorHandling(string input, char propriedade);
 bool inputExist(unsigned int propriedade, char objeto);
 vector<unsigned int> inputExist(string paragem);
 bool inputExist(string paragem, vector<string> lista_paragens);
-
-//void searchLinha();
-//void searchCondutor();
 
 #endif

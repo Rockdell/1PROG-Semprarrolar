@@ -372,7 +372,7 @@ redo:
 			Autocarro ac = it->second;
 			cout << " Autocarro - número " << it->first << ":\n";
 			cout << " Turno: " << ac.getTrabalho().getInicio().showTempo() << " às " << ac.getTrabalho().getFim().showTempo() << endl;
-			
+
 			if (ac.getCondutorID() == 0)
 				cout << " Condutor atribuído: NULL " << endl << endl;
 			else
@@ -586,12 +586,12 @@ void beginAtribuicao()
 	vector<mapTrabalho> newVector;
 
 	//Para cada dia da semana
-	for (size_t i = 0; i <= 7; i++)
+	for (size_t i = 0; i < 7; i++)
 	{
 		mapTrabalho newTrabalho;
 
 		//Para cada linha do dia
-		for (mapLinha::iterator it = linhas_existentes.begin(); it != linhas_existentes.end() ; it++)
+		for (mapLinha::iterator it = linhas_existentes.begin(); it != linhas_existentes.end(); it++)
 		{
 			mapAutocarro newAutocarros;
 
@@ -601,7 +601,8 @@ void beginAtribuicao()
 
 			unsigned int nr_autocarros = 0;
 			unsigned int tempo_ida_volta = 0;
-			vector<Tempo> tempos_saida; tempos_saida.push_back(actual);
+			vector<Tempo> tempos_saida;
+			tempos_saida.push_back(actual);
 
 			//Número de autocarros e hora de saída
 			while (true)
@@ -616,7 +617,7 @@ void beginAtribuicao()
 					nr_autocarros++;
 				}
 			}
-			
+
 			//Tempo que o autocarro demora a ir e vir
 			for (size_t a = 0; a < empresa.getLinhas()[it->first].getTempos().size(); a++)
 			{
@@ -632,7 +633,7 @@ void beginAtribuicao()
 				Tempo fim = inicio;
 				fim.sumTempo(tempo_ida_volta);
 
-				Trabalho turno = Trabalho(tempos_saida.at(c - 1), fim);
+				Trabalho turno = Trabalho(inicio, fim);
 				Autocarro ac = Autocarro(it->first, 0, c, turno);
 				newAutocarros[c] = ac;
 			}

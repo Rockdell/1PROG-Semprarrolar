@@ -1783,6 +1783,7 @@ id:
 	Condutor c = newCondutores[c_id];
 
 	c.showTrabalho();
+	_getch();
 
 	return;
 }

@@ -82,7 +82,8 @@ void Condutor::showCondutor()
 		"\n Horas turno: " << this->hturnoCondutor <<
 		"\n Horas semanais: " << this->hsemanaCondutor <<
 		"\n Horas de descanso: " << this->hdescansoCondutor <<
-		"\n Trabalho: "; this->showTrabalho(); cout << endl << endl;
+		"\n Trabalho: "; this->showTrabalho(); cout << endl;
+	return;
 }
 void Condutor::showTrabalho()
 {
@@ -103,8 +104,5 @@ void Condutor::showTrabalho()
 			//cout << "Conduz o autocarro de ordem " << temp.getAutocarroID() << endl;
 		}
 	}
-
-	_getch();
-
 	return;
 }

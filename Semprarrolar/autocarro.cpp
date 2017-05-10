@@ -9,9 +9,9 @@ Autocarro::Autocarro()
 	this->idLinha = 0;
 	this->idCondutor = 0;
 	this->ordemAutocarro = 0;
-	this->trabalhoAutocarro = vector<Trabalho>(0);
+	this->trabalhoAutocarro = Trabalho();
 }
-Autocarro::Autocarro(unsigned int linhaid, unsigned int condutorid, unsigned int ordem, vector<Trabalho> turnos)
+Autocarro::Autocarro(unsigned int linhaid, unsigned int condutorid, unsigned int ordem, Trabalho turnos)
 {
 	this->idLinha = linhaid;
 	this->idCondutor = condutorid;
@@ -31,7 +31,7 @@ void Autocarro::setCondutorID(unsigned int condutorid)
 {
 	this->idCondutor = condutorid;
 }
-void Autocarro::setTrabalho(vector<Trabalho> turnos)
+void Autocarro::setTrabalho(Trabalho turnos)
 {
 	this->trabalhoAutocarro = turnos;
 }
@@ -48,7 +48,7 @@ unsigned int Autocarro::getCondutorID() const
 {
 	return idCondutor;
 }
-vector<Trabalho> Autocarro::getTrabalho() const
+Trabalho Autocarro::getTrabalho() const
 {
 	return trabalhoAutocarro;
 }

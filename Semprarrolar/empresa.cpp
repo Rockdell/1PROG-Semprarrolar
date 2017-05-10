@@ -16,9 +16,11 @@ Empresa::Empresa()
 {
 	mapCondutor newCondutor;
 	mapLinha newLinha;
+	vector<mapTrabalho> newTrabalho(7);
 
 	this->listaCondutores = newCondutor;
 	this->listaLinhas = newLinha;
+	this->vectorTrabalho = newTrabalho;
 }
 
 void Empresa::setCondutores(mapCondutor lcondutores)
@@ -29,6 +31,10 @@ void Empresa::setLinhas(mapLinha llinhas)
 {
 	this->listaLinhas = llinhas;
 }
+void Empresa::setTrabalho(vector<mapTrabalho> vtrabalho)
+{
+	this->vectorTrabalho = vtrabalho;
+}
 
 mapCondutor Empresa::getCondutores() const
 {
@@ -37,6 +43,10 @@ mapCondutor Empresa::getCondutores() const
 mapLinha Empresa::getLinhas() const
 {
 	return listaLinhas;
+}
+vector<mapTrabalho> Empresa::getTrabalho() const
+{
+	return vectorTrabalho;
 }
 
 void Empresa::fillCondutores(string filename)

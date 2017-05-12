@@ -16,7 +16,7 @@ Empresa::Empresa()
 {
 	mapCondutor newCondutor;
 	mapLinha newLinha;
-	vector<mapTrabalho> newTrabalho(7);
+	vector<linhasDia> newTrabalho(7);
 
 	this->listaCondutores = newCondutor;
 	this->listaLinhas = newLinha;
@@ -31,7 +31,7 @@ void Empresa::setLinhas(mapLinha llinhas)
 {
 	this->listaLinhas = llinhas;
 }
-void Empresa::setTrabalho(vector<mapTrabalho> vtrabalho)
+void Empresa::setTrabalho(vector<linhasDia> vtrabalho)
 {
 	this->vectorTrabalho = vtrabalho;
 }
@@ -44,7 +44,7 @@ mapLinha Empresa::getLinhas() const
 {
 	return listaLinhas;
 }
-vector<mapTrabalho> Empresa::getTrabalho() const
+vector<linhasDia> Empresa::getTrabalho() const
 {
 	return vectorTrabalho;
 }
@@ -646,7 +646,7 @@ erro:
 		case 1:
 		{
 			cont_t++;
-			int temp;
+			unsigned int temp;
 			istringstream t(alt_tempos); t >> temp;
 			new_tempo.push_back(temp);
 			goto a_tempos;
@@ -1379,14 +1379,14 @@ paragem:
 		}
 
 		//Tempo desde a paragem inicial até à final, sentido normal
-		int sum_n = 0;
+		unsigned int sum_n = 0;
 		for (size_t x = 0; x < index_linha_n; x++)
 		{
 			sum_n += l.getTempos().at(x);
 		}
 
 		//Tempo desde a paragem inicial até à final, sentido inverso
-		int sum_i = 0;
+		unsigned int sum_i = 0;
 		vector<unsigned int> t_inv = l.getTempos(); reverse(t_inv.begin(), t_inv.end());
 		for (size_t w = 0; w < index_linha_i; w++)
 		{
@@ -1566,15 +1566,15 @@ paragem_final:
 	}
 
 	//Output
-	int nrOpcao = 1;
+	unsigned int nrOpcao = 1;
 
 	for (size_t i = 0; i < linhasStartFinish.size(); i++)
 	{
 		//Variaveis
-		int idlinha = linhasStartFinish.at(i).at(0);
+		unsigned int idlinha = linhasStartFinish.at(i).at(0);
 		unsigned int i1 = linhasStartFinish.at(i).at(1);
 		unsigned int i2 = linhasStartFinish.at(i).at(2);
-		int sumtempos = 0;
+		unsigned int sumtempos = 0;
 		string percurso = "";
 
 		if (i2 > i1)
@@ -1805,7 +1805,7 @@ void Empresa::infoService()
 
 		unsigned int total = 0;
 
-		for (int n = 0; n < temp_trab.size(); n++)
+		for (unsigned int n = 0; n < temp_trab.size(); n++)
 		{
 			Tempo inicio = temp_trab.at(n).getInicio();
 			Tempo fim = temp_trab.at(n).getFim();
@@ -1813,7 +1813,7 @@ void Empresa::infoService()
 			total += inicio.subtractTempo(fim);
 		}
 
-		int min_semana = i->second.getSemana() * 60;
+		unsigned int min_semana = i->second.getSemana() * 60;
 
 		if (total == min_semana)
 		{

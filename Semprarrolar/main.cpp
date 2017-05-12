@@ -25,7 +25,6 @@ const Tempo T_FIM = Tempo(H_FIM, M_FIM);
 
 //Variáveis boleanas
 bool file_open = false;
-bool day_open = false;
 
 bool alterado_condutor = false;
 bool alterado_linha = false;

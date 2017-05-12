@@ -67,9 +67,11 @@ redo:
 					return;
 				}
 				case 'N':
+				{
 					cout << "O programa fechou sem guardar as alterações.\n";
 					_getch();
 					return;
+				}
 				default:
 					goto erro3;
 				}
@@ -92,6 +94,7 @@ redo:
 			MenuInformacao();
 			break;
 		case '4':
+			beginAtribuicao();
 			MenuAtribuicao();
 			break;
 		default:
@@ -247,9 +250,8 @@ erro:
 }
 void MenuAtribuicao()
 {
-	beginAtribuicao();
-
 	unsigned int index = 0;
+	bool day_open = false;
 	string dia_da_semana;
 
 redo:
@@ -268,7 +270,10 @@ redo:
 		switch (input)
 		{
 		case '0':
+			//vector<linhasDia> resetTrabalho(7);
+			//empresa.setTrabalho(resetTrabalho);
 			return;
+
 		case '1':
 			dia_da_semana = "Segunda-feira";
 			index = 0;
@@ -318,7 +323,7 @@ redo:
 		cout << "\n " << dia_da_semana << endl << endl;
 
 		//Map da com as linhas e os autocarros de cada linha
-		mapTrabalho	linhas_com_autocarros = empresa.getTrabalho().at(index);
+		linhasDia linhas_com_autocarros = empresa.getTrabalho().at(index);
 
 		//Linhas existentes
 		mapLinha lLinhas = empresa.getLinhas();
@@ -345,11 +350,10 @@ redo:
 		case 2:
 		{
 			cerr << "Operação cancelada.\n";
-
-			vector<mapTrabalho> resetTrabalho(7);
-			empresa.setTrabalho(resetTrabalho);
 			_getch();
-			return;
+			 
+			day_open = false;
+			goto redo;			
 		}
 		}
 
@@ -394,7 +398,9 @@ redo:
 		case 2:
 			cerr << "Operação cancelada.\n";
 			_getch();
-			return;
+
+			day_open = false;
+			goto redo;
 		}
 
 		istringstream stream_autocarro(input_autocarro);
@@ -422,7 +428,9 @@ redo:
 		case 2:
 			cerr << "Operação cancelada.\n";
 			_getch();
-			return;
+
+			day_open = false;
+			goto redo;
 		}
 
 		istringstream stream_condutor(input_condutor);
@@ -434,14 +442,15 @@ redo:
 			goto condutor;
 		}
 
-		cout << " Até este ponto, o condutor é válido, o autocarro é válido. Falta confirmar se é possível atribuir o trabalho ao condutor!|\n\n";
+		//Confirmação
+		//?
+
+		//Adicionar
+		atribuirCondutor(c_id, index, l_id, auto_id);
+		
 	}
 
 	_getch();
-
-	day_open = false;
-	index = 0;
-	dia_da_semana = "";
 
 	goto redo;
 }
@@ -583,12 +592,12 @@ void beginAtribuicao()
 {
 	mapLinha linhas_existentes = empresa.getLinhas();
 
-	vector<mapTrabalho> newVector;
+	vector<linhasDia> newVector;
 
 	//Para cada dia da semana
 	for (size_t i = 0; i < 7; i++)
 	{
-		mapTrabalho newTrabalho;
+		linhasDia newTrabalho;
 
 		//Para cada linha do dia
 		for (mapLinha::iterator it = linhas_existentes.begin(); it != linhas_existentes.end(); it++)
@@ -633,7 +642,7 @@ void beginAtribuicao()
 				Tempo fim = inicio;
 				fim.sumTempo(tempo_ida_volta);
 
-				Trabalho turno = Trabalho(inicio, fim);
+				Trabalho turno = Trabalho(i, it->first, c, inicio, fim);
 				Autocarro ac = Autocarro(it->first, 0, c, turno);
 				newAutocarros[c] = ac;
 			}
@@ -645,6 +654,46 @@ void beginAtribuicao()
 	}
 
 	empresa.setTrabalho(newVector);
+
+	//A estrutura básica está criada. Agora falta adicionar os condutores já atribuidos
+
+	mapCondutor condutoresActual = empresa.getCondutores();
+
+	for (mapCondutor::iterator it = condutoresActual.begin(); it != condutoresActual.end(); it++)
+	{
+		vector<Trabalho> trabalhoCondutor = it->second.getTrabalho();
+
+		for (size_t i = 0; i < trabalhoCondutor.size(); i++)
+		{
+			Trabalho trabalhoActual = trabalhoCondutor.at(i);
+
+			newVector.at(trabalhoActual.getDiaSemana())[trabalhoActual.getLinhaID()][trabalhoActual.getAutocarroID()].setCondutorID(it->first);
+		}
+	}
+
+	empresa.setTrabalho(newVector);
+
+	return;
+}
+void atribuirCondutor(unsigned int idCondutor, unsigned int dia, unsigned int idLinha, unsigned int idAutocarro)
+{
+	//Vetor com o trabalho dos dias
+	vector<linhasDia> trabalhoActual = empresa.getTrabalho();
+
+	//Atribuir o condutor ao autocarro
+	trabalhoActual.at(dia)[idLinha][idAutocarro].setCondutorID(idCondutor);
+	empresa.setTrabalho(trabalhoActual);
+
+	//Map de condutores actuais e vector do trabalho do condutor
+	mapCondutor condutoresActual = empresa.getCondutores();
+
+	//Atribuir o turno ao condutor
+	vector<Trabalho> trabalhoCondutor = condutoresActual[idCondutor].getTrabalho();
+	trabalhoCondutor.push_back(empresa.getTrabalho().at(dia)[idLinha][idAutocarro].getTrabalho());
+	condutoresActual[idCondutor].setTrabalho(trabalhoCondutor);
+	empresa.setCondutores(condutoresActual);
+
+	cout << " Condutor adicionado com sucesso! \n";
 
 	return;
 }

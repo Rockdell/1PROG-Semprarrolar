@@ -22,5 +22,6 @@ vector<unsigned int> inputExist(string paragem);
 bool inputExist(string paragem, vector<string> lista_paragens);
 
 void beginAtribuicao();
+void atribuirCondutor(unsigned int idCondutor, unsigned int dia, unsigned int idLinha, unsigned int idAutocarro);
 
 #endif

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <tuple>
 
 #include "trabalho.h"
 
@@ -38,6 +39,8 @@ private:
 	unsigned int hsemanaCondutor;
 	unsigned int hdescansoCondutor;
 	vector<Trabalho> trabalhoCondutor;
+	//unsigned int sumTempo;
+	//Tempo proximoTempo;
 
 };
 

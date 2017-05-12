@@ -13,9 +13,9 @@ using namespace std;
 
 typedef map <unsigned int, Condutor> mapCondutor;
 typedef map <unsigned int, Linha> mapLinha;
-
 typedef map<unsigned int, Autocarro> mapAutocarro;
-typedef map<unsigned int, mapAutocarro> mapTrabalho;
+
+typedef map<unsigned int, mapAutocarro> linhasDia;
 
 class Empresa
 {
@@ -24,11 +24,11 @@ public:
 
 	void setCondutores(mapCondutor lcondutores);
 	void setLinhas(mapLinha llinhas);
-	void setTrabalho(vector<mapTrabalho> vtrabalho);
+	void setTrabalho(vector<linhasDia> vtrabalho);
 
 	mapCondutor getCondutores() const;
 	mapLinha getLinhas() const;
-	vector<mapTrabalho> getTrabalho() const;
+	vector<linhasDia> getTrabalho() const;
 
 	void fillCondutores(string filename);
 	void fillLinhas(string filename);
@@ -61,7 +61,7 @@ public:
 private:
 	mapCondutor listaCondutores;
 	mapLinha listaLinhas;
-	vector<mapTrabalho> vectorTrabalho;
+	vector<linhasDia> vectorTrabalho;
 	
 	/*
 	0 - segunda

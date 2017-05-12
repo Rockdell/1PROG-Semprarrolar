@@ -11,23 +11,26 @@ class Trabalho
 {
 public:
 	Trabalho();
-	Trabalho(Tempo inicio, Tempo fim);
+	Trabalho(unsigned int dia, unsigned int linha, unsigned int autocarro, Tempo inicio, Tempo fim);
 
-	//void setAutocarroID(unsigned int autocarroid);
-	//void setCondutorID(unsigned int condutorid);
+	void setDiaSemana(unsigned int dia);
+	void setLinhaID(unsigned int linhaid);
+	void setAutocarroID(unsigned int autocarroid);
 	void setInicio(Tempo inicio);
 	void setFim(Tempo fim);
 
-	//unsigned int getAutocarroID() const;
-	//unsigned int getCondutorID() const;
+	unsigned int getDiaSemana() const;
+	unsigned int getLinhaID() const;
+	unsigned int getAutocarroID() const;
 	Tempo getInicio() const;
 	Tempo getFim() const;
 
 	//void showTrabalho();
 
 private:
-	//unsigned int idAutocarro;
-	//unsigned int idCondutor;
+	unsigned int diaSemana;
+	unsigned int idLinha;
+	unsigned int idAutocarro;
 	Tempo inicioTrabalho;
 	Tempo fimTrabalho;
 

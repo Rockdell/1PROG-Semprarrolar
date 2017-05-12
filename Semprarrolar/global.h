@@ -15,7 +15,6 @@ extern const unsigned int H_FIM, M_FIM;
 extern const Tempo T_FIM;
 
 extern bool file_open;
-extern bool day_open;
 
 extern bool alterado_condutor;
 extern bool alterado_linha;

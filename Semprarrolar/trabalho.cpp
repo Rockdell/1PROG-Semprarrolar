@@ -5,27 +5,33 @@ using namespace std;
 
 Trabalho::Trabalho()
 {
-	//this->idAutocarro = 0;
-	//this->idCondutor = 0;
+	this->diaSemana = 8;
+	this->idLinha = 0;
+	this->idAutocarro = 0;
 	this->inicioTrabalho = Tempo();
 	this->fimTrabalho = Tempo();
 }
-Trabalho::Trabalho(Tempo inicio, Tempo fim)
+Trabalho::Trabalho(unsigned int dia, unsigned int linha, unsigned int autocarro, Tempo inicio, Tempo fim)
 {
-	//this->idAutocarro = autocarroid;
-	//this->idCondutor = condutorid;
+	this-> diaSemana = dia;
+	this->idLinha = linha;
+	this->idAutocarro = autocarro;
 	this->inicioTrabalho = inicio;
 	this->fimTrabalho = fim;
 }
 
-//void Trabalho::setAutocarroID(unsigned int autocarroid)
-//{
-//	this->idAutocarro = autocarroid;
-//}
-//void Trabalho::setCondutorID(unsigned int condutorid)
-//{
-//	this->idCondutor = condutorid;
-//}
+void Trabalho::setDiaSemana(unsigned int dia)
+{
+	this->diaSemana = dia;
+}
+void Trabalho::setLinhaID(unsigned int linhaid)
+{
+	this->idLinha = linhaid;
+}
+void Trabalho::setAutocarroID(unsigned int autocarroid)
+{
+	this->idAutocarro = autocarroid;
+}
 void Trabalho::setInicio(Tempo inicio)
 {
 	this->inicioTrabalho = inicio;
@@ -35,14 +41,18 @@ void Trabalho::setFim(Tempo fim)
 	this->fimTrabalho = fim;
 }
 
-//unsigned int Trabalho::getAutocarroID() const
-//{
-//	return idAutocarro;
-//}
-//unsigned int Trabalho::getCondutorID() const
-//{
-//	return idCondutor;
-//}
+unsigned int Trabalho::getDiaSemana() const
+{
+	return diaSemana;
+}
+unsigned int Trabalho::getLinhaID() const
+{
+	return idLinha;
+}
+unsigned int Trabalho::getAutocarroID() const
+{
+	return idAutocarro;
+}
 Tempo Trabalho::getInicio() const
 {
 	return inicioTrabalho;

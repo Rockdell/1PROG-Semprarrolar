@@ -724,6 +724,23 @@ id:
 		goto id;
 	}
 
+	cout << " Tem a certeza que quer eliminar esta linha? (Y/N)\n";
+
+confirmation:
+	char input_confirmation = _getch();
+
+	switch (toupper(input_confirmation))
+	{
+	case 'Y':
+		break;
+	case 'N':
+		cout << " Operação cancelada.\n";
+		_getch();
+		return;
+	default:
+		goto confirmation;
+	}
+
 	mapLinha newLinhas = empresa.getLinhas();
 	newLinhas.erase(l_id);
 
@@ -1214,6 +1231,23 @@ id:
 	{
 		cerr << " Esse condutor não existe. Escolha outro: ";
 		goto id;
+	}
+
+	cout << " Tem a certeza que quer eliminar este condutor? (Y/N)\n";
+
+confirmation:
+	char input_confirmation = _getch();
+
+	switch (toupper(input_confirmation))
+	{
+	case 'Y':
+		break;
+	case 'N':
+		cout << " Operação cancelada.\n";
+		_getch();
+		return;
+	default:
+		goto confirmation;
 	}
 
 	mapCondutor newCondutores = empresa.getCondutores();
@@ -1738,7 +1772,7 @@ id:
 	return;
 
 }
-void Empresa::infoTrabalho()
+void Empresa::infoTrabalhoCondutor()
 {
 	string input_id;
 	unsigned int c_id, contador = 0;
@@ -1833,8 +1867,13 @@ void Empresa::infoService()
 	_getch();
 }
 
-/*void Empresa::infoAutocarro()
-{
+//void Empresa::infoAutocarro()
+//{
+//	string input_id;
+//	unsigned int dia_semana;
+//	unsigned int auto_id;
+//	unsigned int linha_id;
+//
+//	cout << " \nPretende visualizar o trabalho de qual condutor? ";
+//}
 
-}
-*/

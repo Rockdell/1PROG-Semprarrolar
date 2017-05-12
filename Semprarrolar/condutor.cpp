@@ -3,6 +3,7 @@
 
 #include "condutor.h"
 #include "trabalho.h"
+#include "library.h"
 
 using namespace std;
 
@@ -95,14 +96,19 @@ void Condutor::showTrabalho()
 	}
 	else
 	{
-		cout << "\nTrabalho atribuido ao condutor " << this->nomeCondutor << " :" << endl << endl;
+		cout << "\n Trabalho atribuido ao condutor " << this->nomeCondutor << ":" << endl << endl;
 
 		for (unsigned int i = 0; i < trab.size(); i++)
 		{
 			Trabalho temp = trab.at(i);
-			cout << "De " << temp.getInicio().showTempo() << " a " << temp.getFim().showTempo() << endl;
-			//cout << "Conduz o autocarro de ordem " << temp.getAutocarroID() << endl;
+			cout << " Dia de semana: " << intDay(temp.getDiaSemana()) << endl;
+			cout << " Linha: " << temp.getLinhaID() << endl;
+			cout << " Autocarro: " << temp.getAutocarroID() << endl;
+			cout << " Turno: " << temp.getInicio().showTempo() << " a " << temp.getFim().showTempo() << endl << endl;
 		}
 	}
+
+	_getch();
+
 	return;
 }

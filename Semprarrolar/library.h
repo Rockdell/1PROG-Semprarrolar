@@ -20,6 +20,7 @@ unsigned int inputErrorHandling(string input, char propriedade);
 bool inputExist(unsigned int propriedade, char objeto);
 vector<unsigned int> inputExist(string paragem);
 bool inputExist(string paragem, vector<string> lista_paragens);
+string intDay(unsigned int day);
 
 void beginAtribuicao();
 void atribuirCondutor(unsigned int idCondutor, unsigned int dia, unsigned int idLinha, unsigned int idAutocarro);

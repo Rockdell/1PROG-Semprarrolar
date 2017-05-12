@@ -118,13 +118,13 @@ redo:
 		{
 			string filename_condutor, filename_linha;
 
-			cout << "Ficheiro de condutores?"; getline(cin, filename_condutor);
-			cout << "Ficheiro de linhas?"; getline(cin, filename_linha);
+			cout << " Ficheiro de condutores? "; getline(cin, filename_condutor);
+			cout << " Ficheiro de linhas? "; getline(cin, filename_linha);
 
 			empresa.fillCondutores(filename_condutor);
 			empresa.fillLinhas(filename_linha);
 
-			cout << "Condutores e linhas loaded!\n";
+			cout << " Condutores e linhas loaded! \n";
 			_getch();
 
 			file_open = true;
@@ -198,7 +198,7 @@ erro:
 		empresa.removeCondutor();
 		break;
 	case '4':
-		empresa.infoTrabalho();
+		empresa.infoTrabalhoCondutor();
 		break;
 	case '5':
 		empresa.infoService();
@@ -270,8 +270,6 @@ redo:
 		switch (input)
 		{
 		case '0':
-			//vector<linhasDia> resetTrabalho(7);
-			//empresa.setTrabalho(resetTrabalho);
 			return;
 
 		case '1':
@@ -412,6 +410,11 @@ redo:
 			cerr << " Esse autocarro não existe. Escolha outro: ";
 			goto autocarro;
 		}
+		else if (empresa.getTrabalho().at(index)[l_id][auto_id].getCondutorID() != 0)
+		{
+			cerr << " Esse autocarro já tem um condutor atribuído. Escolha outro: ";
+			goto autocarro;
+		}
 
 		cout << " Que condutor pretende atribuir o trabalho? ";
 
@@ -443,9 +446,9 @@ redo:
 		}
 
 		//Confirmação
-		//?
+		
 
-		//Adicionar
+		//Adicionar o condutor
 		atribuirCondutor(c_id, index, l_id, auto_id);
 		
 	}
@@ -586,6 +589,26 @@ vector<unsigned int> inputExist(string paragem)
 	}
 
 	return result;
+}
+string intDay(unsigned int day)
+{
+	switch (day)
+	{
+	case 0:
+		return "Segunda-feira";
+	case 1:
+		return "Terça-feira";
+	case 2:
+		return "Quarta-feira";
+	case 3:
+		return "Quinta-feira";
+	case 4:
+		return "Sexta-feira";
+	case 5:
+		return "Sábado";
+	case 6:
+		return "Domingo";
+	}
 }
 
 void beginAtribuicao()

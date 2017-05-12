@@ -54,9 +54,9 @@ public:
 	void inquirirParagem();
 
 	void infoLinha();
-	void infoTrabalho();
+	void infoTrabalhoCondutor();
 	void infoService();
-	//void infoAutocarro();
+	/*void infoAutocarro();*/
 
 private:
 	mapCondutor listaCondutores;

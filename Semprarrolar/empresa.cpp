@@ -1919,9 +1919,9 @@ input_d:
 
 	cout << " Linhas existentes:" << endl;
 
-	for (mapLinha::iterator i = lLinhas.begin(); i != lLinhas.end(); i++)
+	for (mapLinha::iterator it = lLinhas.begin(); it != lLinhas.end(); it++)
 	{
-		cout << i->second.getID() << endl;
+		cout << it->second.getID() << endl;
 	}
 
 	cout << " Qual a linha do autocarro? ";
@@ -1958,8 +1958,7 @@ input_l:
 	//Output dos autocarros da linha desse dia
 	for (mapAutocarro::iterator it = autocarros_da_linha.begin(); it != autocarros_da_linha.end(); it++)
 	{
-		Autocarro ac = it->second;
-		cout << " Autocarro - número " << it->first << endl;
+		cout << " Autocarro nº " << it->first << endl;
 	}
 	
 	cout << " Qual o autocarro que pretende visualizar? ";
@@ -2004,8 +2003,12 @@ input_a:
 	else
 		cout << " Condutor atribuído: " << empresa.getCondutores()[ac.getCondutorID()].getNome() << endl;
 
-	cout << " Turno: " << ac.getTrabalho().getInicio().showTempo() << " a " << ac.getTrabalho().getFim().showTempo() << endl << endl;
-	
+	//Output dos turnos
+	for (size_t i = 0; i < ac.getTrabalho().size(); i++)
+	{
+		cout << "Turno nº " << i + 1 << ": " << ac.getTrabalho().at(i).getInicio().showTempo() << " às " << ac.getTrabalho().at(i).getFim().showTempo() << endl;
+	}
+
 	_getch();
 
 	return;
@@ -2016,16 +2019,24 @@ void Empresa::trabalhoAutocarroLeft()
 
 	for (size_t i = 0; i < vectorTrabalho.size(); i++)
 	{
+		cout << " " << intDay(i) << ": " << endl << endl;
+
 		for (linhasDia::iterator it = vectorTrabalho.at(i).begin(); it != vectorTrabalho.at(i).end(); it++)
 		{
+			cout << " " << it->first << ": " << endl;
+
 			for (mapAutocarro::iterator a = it->second.begin(); a != it->second.end(); a++)
 			{
 				if (a->second.getCondutorID() == 0)
 				{
-					cout << " Autocarro nº " << a->second.getOrdem() << ", da linha " << a->second.getLinhaID() << " de " << intDay(i) << endl;
+					cout << " Autocarro nº " << a->second.getOrdem() << endl;
 				}
 			}
+
+			cout << endl;
 		}
+
+		cout << endl;
 	}
 
 	_getch();
@@ -2056,9 +2067,11 @@ void Empresa::beginAtribuicao()
 			unsigned int nr_autocarros = 0;
 			unsigned int tempo_ida_volta = 0;
 			vector<Tempo> tempos_saida;
+			vector<Tempo> tempos_chegada;
+
 			tempos_saida.push_back(actual);
 
-			//Número de autocarros e hora de saída
+			//Hora de saída
 			while (true)
 			{
 				actual.sumTempo(empresa.getLinhas()[it->first].getFreq());
@@ -2079,17 +2092,59 @@ void Empresa::beginAtribuicao()
 			}
 			tempo_ida_volta *= 2;
 
+			//Hora de chegada
+			for (size_t a = 0; a < tempos_saida.size(); a++)
+			{
+				Tempo temp = tempos_saida.at(a);
+
+				temp.sumTempo(tempo_ida_volta);
+
+				tempos_chegada.push_back(temp);
+			}
+
 			//Preencher newAutocarro
-			for (size_t c = 1; c <= nr_autocarros; c++)
+			for (size_t a = 0; a < tempos_saida.size(); a++)
 			{
 				//Inicio e fim do turno
-				Tempo inicio = tempos_saida.at(c - 1);
+				Tempo inicio = tempos_saida.at(a);
 				Tempo fim = inicio;
 				fim.sumTempo(tempo_ida_volta);
 
-				Trabalho turno = Trabalho(i, it->first, c, inicio, fim);
-				Autocarro ac = Autocarro(it->first, 0, c, turno);
-				newAutocarros[c] = ac;
+				Trabalho turno = Trabalho(i, it->first, a + 1, inicio, fim);
+				
+				if (newAutocarros.size() == 0)
+				{
+					vector<Trabalho> newTurnos;
+
+					newTurnos.push_back(turno);
+					Autocarro ac = Autocarro(it->first, 0, a + 1, newTurnos);
+					newAutocarros[a + 1] = ac;
+				}
+				else
+				{
+					for (mapAutocarro::iterator ot = newAutocarros.begin(); ot != newAutocarros.end(); ot++)
+					{
+						if (ot->second.getTrabalho().back().getFim().getHora() < inicio.getHora() || (ot->second.getTrabalho().back().getFim().getHora() == inicio.getHora()) && (ot->second.getTrabalho().back().getFim().getMinuto() <= inicio.getMinuto()))
+						{
+							vector<Trabalho> trabalhoAutocarro = ot->second.getTrabalho();
+
+							trabalhoAutocarro.push_back(turno);
+
+							ot->second.setTrabalho(trabalhoAutocarro);
+
+							break;
+						}
+
+						if (ot->first == newAutocarros.rbegin()->first)
+						{
+							vector<Trabalho> newTurnos;
+
+							newTurnos.push_back(turno);
+							Autocarro ac = Autocarro(it->first, 0, a + 1, newTurnos);
+							newAutocarros[a + 1] = ac;
+						}
+					}
+				}
 			}
 
 			newTrabalho[it->first] = newAutocarros;
@@ -2134,7 +2189,14 @@ void Empresa::atribuirCondutor(unsigned int idCondutor, unsigned int dia, unsign
 
 	//Atribuir o turno ao condutor
 	vector<Trabalho> trabalhoCondutor = condutoresActual[idCondutor].getTrabalho();
-	trabalhoCondutor.push_back(empresa.getTrabalho().at(dia)[idLinha][idAutocarro].getTrabalho());
+
+	for (size_t i = 0; i < empresa.getTrabalho().at(dia)[idLinha][idAutocarro].getTrabalho().size(); i++)
+	{
+		trabalhoCondutor.push_back(empresa.getTrabalho().at(dia)[idLinha][idAutocarro].getTrabalho().at(i));
+	}
+
+	//sort(trabalhoCondutor.begin(), trabalhoCondutor.end());
+
 	condutoresActual[idCondutor].setTrabalho(trabalhoCondutor);
 	empresa.setCondutores(condutoresActual);
 

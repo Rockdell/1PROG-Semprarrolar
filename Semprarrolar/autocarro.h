@@ -11,26 +11,23 @@ class Autocarro
 {
 public:
 	Autocarro();
-	Autocarro(unsigned int linhaid, unsigned int condutorid, unsigned int ordem, Trabalho turnos);
+	Autocarro(unsigned int linhaid, unsigned int condutorid, unsigned int ordem, vector<Trabalho> turnos);
 
 	void setOrdem(unsigned int ordem);
 	void setLinhaID(unsigned int linhaid);
 	void setCondutorID(unsigned int condutorid);
-	void setTrabalho(Trabalho turnos);
+	void setTrabalho(vector<Trabalho> turnos);
 	
 	unsigned int getOrdem() const;
 	unsigned int getLinhaID() const;
 	unsigned int getCondutorID() const;
-	Trabalho getTrabalho() const;
-
-	//void showAutocarros();
-	//void showTrabalho();
+	vector<Trabalho> getTrabalho() const;
 
 private:
 	unsigned int idLinha;
 	unsigned int idCondutor;
 	unsigned int ordemAutocarro;
-	Trabalho trabalhoAutocarro;
+	vector<Trabalho> trabalhoAutocarro;
 
 };
 

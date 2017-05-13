@@ -6,12 +6,14 @@ using namespace std;
 
 Autocarro::Autocarro()
 {
+	vector<Trabalho> newTrabalho;
+
 	this->idLinha = 0;
 	this->idCondutor = 0;
 	this->ordemAutocarro = 0;
-	this->trabalhoAutocarro = Trabalho();
+	this->trabalhoAutocarro = newTrabalho;
 }
-Autocarro::Autocarro(unsigned int linhaid, unsigned int condutorid, unsigned int ordem, Trabalho turnos)
+Autocarro::Autocarro(unsigned int linhaid, unsigned int condutorid, unsigned int ordem, vector<Trabalho> turnos)
 {
 	this->idLinha = linhaid;
 	this->idCondutor = condutorid;
@@ -31,7 +33,7 @@ void Autocarro::setCondutorID(unsigned int condutorid)
 {
 	this->idCondutor = condutorid;
 }
-void Autocarro::setTrabalho(Trabalho turnos)
+void Autocarro::setTrabalho(vector<Trabalho> turnos)
 {
 	this->trabalhoAutocarro = turnos;
 }
@@ -48,7 +50,7 @@ unsigned int Autocarro::getCondutorID() const
 {
 	return idCondutor;
 }
-Trabalho Autocarro::getTrabalho() const
+vector<Trabalho> Autocarro::getTrabalho() const
 {
 	return trabalhoAutocarro;
 }

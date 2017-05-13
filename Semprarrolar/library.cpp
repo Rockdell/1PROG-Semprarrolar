@@ -334,9 +334,9 @@ redo:
 
 		cout << "Linhas existentes:" << endl;
 
-		for (mapLinha::iterator i = lLinhas.begin(); i != lLinhas.end(); i++)
+		for (mapLinha::iterator it = lLinhas.begin(); it != lLinhas.end(); it++)
 		{
-			cout << i->second.getID() << endl;
+			cout << it->second.getID() << endl;
 		}
 
 		cout << " \nQue linha pretende selecionar? ";
@@ -379,7 +379,11 @@ redo:
 		{
 			Autocarro ac = it->second;
 			cout << " Autocarro - número " << it->first << ":\n";
-			cout << " Turno: " << ac.getTrabalho().getInicio().showTempo() << " às " << ac.getTrabalho().getFim().showTempo() << endl;
+
+			for (size_t i = 0; i < ac.getTrabalho().size(); i++)
+			{
+				cout << "Turno nº " << i + 1 << ": " << ac.getTrabalho().at(i).getInicio().showTempo() << " às " << ac.getTrabalho().at(i).getFim().showTempo() << endl;
+			}
 
 			if (ac.getCondutorID() == 0)
 				cout << " Condutor atribuído: NULL " << endl << endl;

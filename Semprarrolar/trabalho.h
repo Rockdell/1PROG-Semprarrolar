@@ -5,8 +5,6 @@
 
 using namespace std;
 
-//typedef vector<pair<Tempo, Tempo>> vectorTurno;
-
 class Trabalho
 {
 public:
@@ -24,8 +22,6 @@ public:
 	unsigned int getAutocarroID() const;
 	Tempo getInicio() const;
 	Tempo getFim() const;
-
-	//void showTrabalho();
 
 private:
 	unsigned int diaSemana;

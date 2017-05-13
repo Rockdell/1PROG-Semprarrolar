@@ -54,16 +54,20 @@ public:
 	void inquirirParagem();
 
 	void infoLinha();
-	void infoTrabalhoCondutor();
-	void infoService();
-	/*void infoAutocarro();*/
+	void trabalhoCondutor();
+	void trabalhoCondutorLeft();
+	void infoAutocarro();
+	void trabalhoAutocarroLeft();
+
+	void beginAtribuicao();
+	void atribuirCondutor(unsigned int idCondutor, unsigned int dia, unsigned int idLinha, unsigned int idAutocarro);
 
 private:
 	mapCondutor listaCondutores;
 	mapLinha listaLinhas;
 	vector<linhasDia> vectorTrabalho;
 	
-	/*
+	/* vectorTrabalho:
 	0 - segunda
 	1 - terça
 	2 - quarta

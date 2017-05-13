@@ -23,6 +23,9 @@ void MenuPrincipal()
 redo:
 
 	clearScreen();
+	
+	//Sempre que inicia o menu principal, actualiza o vectorTrabalho
+	empresa.beginAtribuicao();
 
 	cout << "---MENU PRINCIPAL---\n";
 
@@ -94,7 +97,6 @@ redo:
 			MenuInformacao();
 			break;
 		case '4':
-			beginAtribuicao();
 			MenuAtribuicao();
 			break;
 		default:
@@ -137,7 +139,6 @@ redo:
 
 		goto redo;
 	}
-
 }
 void MenuLinhas()
 {
@@ -198,10 +199,10 @@ erro:
 		empresa.removeCondutor();
 		break;
 	case '4':
-		empresa.infoTrabalhoCondutor();
+		empresa.trabalhoCondutor();
 		break;
 	case '5':
-		empresa.infoService();
+		empresa.trabalhoCondutorLeft();
 		break;
 	default:
 		goto erro;
@@ -218,7 +219,7 @@ redo:
 	cout << "---MENU INFORMAÇÂO---\n";
 
 	cout << " (1) Percurso entre duas paragens\n (2) Horário de uma linha\n (3) Horário de uma paragem\n (4) Inquirir paragem\n " <<
-		"(5) Informação de uma linha\n (6) Informação de um autocarro\n\n";
+		"(5) Informação de uma linha\n (6) Informação de um autocarro\n (7) Autocarros sem condutor\n\n";
 
 erro:
 	char input = _getch();
@@ -241,6 +242,12 @@ erro:
 		break;
 	case '5':
 		empresa.infoLinha();
+		break;
+	case '6':
+		empresa.infoAutocarro();
+		break;
+	case '7':
+		empresa.trabalhoAutocarroLeft();
 		break;
 	default:
 		goto erro;
@@ -271,7 +278,6 @@ redo:
 		{
 		case '0':
 			return;
-
 		case '1':
 			dia_da_semana = "Segunda-feira";
 			index = 0;
@@ -449,7 +455,7 @@ redo:
 		
 
 		//Adicionar o condutor
-		atribuirCondutor(c_id, index, l_id, auto_id);
+		empresa.atribuirCondutor(c_id, index, l_id, auto_id);
 		
 	}
 
@@ -609,114 +615,4 @@ string intDay(unsigned int day)
 	case 6:
 		return "Domingo";
 	}
-}
-
-void beginAtribuicao()
-{
-	mapLinha linhas_existentes = empresa.getLinhas();
-
-	vector<linhasDia> newVector;
-
-	//Para cada dia da semana
-	for (size_t i = 0; i < 7; i++)
-	{
-		linhasDia newTrabalho;
-
-		//Para cada linha do dia
-		for (mapLinha::iterator it = linhas_existentes.begin(); it != linhas_existentes.end(); it++)
-		{
-			mapAutocarro newAutocarros;
-
-			//Hora de inicio
-			Tempo actual = T_INICIO;
-			bool acabarPreencher = false;
-
-			unsigned int nr_autocarros = 0;
-			unsigned int tempo_ida_volta = 0;
-			vector<Tempo> tempos_saida;
-			tempos_saida.push_back(actual);
-
-			//Número de autocarros e hora de saída
-			while (true)
-			{
-				actual.sumTempo(empresa.getLinhas()[it->first].getFreq());
-
-				if (actual.getHora() > T_FIM.getHora() || (actual.getHora() == T_FIM.getHora() && actual.getMinuto() > T_FIM.getMinuto()))
-					break;
-				else
-				{
-					tempos_saida.push_back(actual);
-					nr_autocarros++;
-				}
-			}
-
-			//Tempo que o autocarro demora a ir e vir
-			for (size_t a = 0; a < empresa.getLinhas()[it->first].getTempos().size(); a++)
-			{
-				tempo_ida_volta += empresa.getLinhas()[it->first].getTempos().at(a);
-			}
-			tempo_ida_volta *= 2;
-
-			//Preencher newAutocarro
-			for (size_t c = 1; c <= nr_autocarros; c++)
-			{
-				//Inicio e fim do turno
-				Tempo inicio = tempos_saida.at(c - 1);
-				Tempo fim = inicio;
-				fim.sumTempo(tempo_ida_volta);
-
-				Trabalho turno = Trabalho(i, it->first, c, inicio, fim);
-				Autocarro ac = Autocarro(it->first, 0, c, turno);
-				newAutocarros[c] = ac;
-			}
-
-			newTrabalho[it->first] = newAutocarros;
-		}
-
-		newVector.push_back(newTrabalho);
-	}
-
-	empresa.setTrabalho(newVector);
-
-	//A estrutura básica está criada. Agora falta adicionar os condutores já atribuidos
-
-	mapCondutor condutoresActual = empresa.getCondutores();
-
-	for (mapCondutor::iterator it = condutoresActual.begin(); it != condutoresActual.end(); it++)
-	{
-		vector<Trabalho> trabalhoCondutor = it->second.getTrabalho();
-
-		for (size_t i = 0; i < trabalhoCondutor.size(); i++)
-		{
-			Trabalho trabalhoActual = trabalhoCondutor.at(i);
-
-			newVector.at(trabalhoActual.getDiaSemana())[trabalhoActual.getLinhaID()][trabalhoActual.getAutocarroID()].setCondutorID(it->first);
-		}
-	}
-
-	empresa.setTrabalho(newVector);
-
-	return;
-}
-void atribuirCondutor(unsigned int idCondutor, unsigned int dia, unsigned int idLinha, unsigned int idAutocarro)
-{
-	//Vetor com o trabalho dos dias
-	vector<linhasDia> trabalhoActual = empresa.getTrabalho();
-
-	//Atribuir o condutor ao autocarro
-	trabalhoActual.at(dia)[idLinha][idAutocarro].setCondutorID(idCondutor);
-	empresa.setTrabalho(trabalhoActual);
-
-	//Map de condutores actuais e vector do trabalho do condutor
-	mapCondutor condutoresActual = empresa.getCondutores();
-
-	//Atribuir o turno ao condutor
-	vector<Trabalho> trabalhoCondutor = condutoresActual[idCondutor].getTrabalho();
-	trabalhoCondutor.push_back(empresa.getTrabalho().at(dia)[idLinha][idAutocarro].getTrabalho());
-	condutoresActual[idCondutor].setTrabalho(trabalhoCondutor);
-	empresa.setCondutores(condutoresActual);
-
-	cout << " Condutor adicionado com sucesso! \n";
-
-	return;
 }

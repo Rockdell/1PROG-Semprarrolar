@@ -96,8 +96,6 @@ void Condutor::showTrabalho()
 	}
 	else
 	{
-		cout << "\n Trabalho atribuido ao condutor " << this->nomeCondutor << ":" << endl << endl;
-
 		for (unsigned int i = 0; i < trab.size(); i++)
 		{
 			Trabalho temp = trab.at(i);

@@ -22,4 +22,6 @@ vector<unsigned int> inputExist(string paragem);
 bool inputExist(string paragem, vector<string> lista_paragens);
 string intDay(unsigned int day);
 
+//void sortTrabalho(vector<Trabalho> &trab);
+
 #endif

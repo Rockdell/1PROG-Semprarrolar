@@ -23,14 +23,14 @@ void MenuPrincipal()
 redo:
 
 	clearScreen();
-	
-	//Sempre que inicia o menu principal, actualiza o vectorTrabalho
-	empresa.beginAtribuicao();
 
 	cout << "---MENU PRINCIPAL---\n";
 
 	if (file_open)
 	{
+		//Sempre que inicia o menu principal, actualiza o vectorTrabalho
+		empresa.beginAtribuicao();
+
 		cout << "(1) Linhas\n(2) Condutores\n(3) Informação\n(4) Atribuição de trabalho\n";
 
 	erro1:
@@ -372,7 +372,7 @@ redo:
 
 		mapAutocarro autocarros_da_linha = linhas_com_autocarros[l_id];
 
-		cout << "\n Linha: " << l_id << endl;
+		cout << "\n Linha: " << l_id << endl << endl;
 
 		//Output dos autocarros da linha desse dia
 		for (mapAutocarro::iterator it = autocarros_da_linha.begin(); it != autocarros_da_linha.end(); it++)
@@ -391,75 +391,136 @@ redo:
 				cout << " Condutor atribuído: " << empresa.getCondutores()[ac.getCondutorID()].getNome() << endl << endl;
 		}
 
-		cout << " A que autocarro pretende atribuir o condutor? ";
+		cout << "\n (1) Atribuir condutor\n (2) Desatribuir condutor\n\n";
 
-	autocarro:
-		getline(cin, input_autocarro);
+	input:
+		char input = _getch();
 
-		switch (inputErrorHandling(input_autocarro, 'i'))
+		switch (input)
 		{
-		case 0:
-			cerr << "Input inválido. Introduza novamente:";
-			goto autocarro;
-		case 1:
+		case '0':
+			return;
+		case '1':
+		{
+			cout << " A que autocarro pretende atribuir o condutor? ";
+			
+		autocarro1:
+			getline(cin, input_autocarro);
+			
+			switch (inputErrorHandling(input_autocarro, 'i'))
+			{
+			case 0:
+				cerr << "Input inválido. Introduza novamente:";
+				goto autocarro1;
+			case 1:
+				break;
+			case 2:
+				cerr << "Operação cancelada.\n";
+				_getch();
+			
+				day_open = false;
+				goto redo;
+			}
+			
+			istringstream stream_autocarro(input_autocarro);
+			stream_autocarro >> auto_id;
+			
+			//Autocarro existe?
+			if (auto_id < 1 || auto_id > autocarros_da_linha.rbegin()->first)
+			{
+				cerr << " Esse autocarro não existe. Escolha outro: ";
+				goto autocarro1;
+			}
+			else if (empresa.getTrabalho().at(index)[l_id][auto_id].getCondutorID() != 0)
+			{
+				cerr << " Esse autocarro já tem um condutor atribuído. Escolha outro: ";
+				goto autocarro1;
+			}
+			
+			cout << " Que condutor pretende atribuir o trabalho? ";
+			
+		condutor1:
+			getline(cin, input_condutor);
+			
+			switch (inputErrorHandling(input_condutor, 'i'))
+			{
+			case 0:
+				cerr << "Input inválido. Introduza novamente:";
+				goto condutor1;
+			case 1:
+				break;
+			case 2:
+				cerr << "Operação cancelada.\n";
+				_getch();
+			
+				day_open = false;
+				goto redo;
+			}
+			
+			istringstream stream_condutor(input_condutor);
+			stream_condutor >> c_id;
+			
+			if (!inputExist(c_id, 'c'))
+			{
+				cerr << " Esse condutor não existe. Escolha outro: ";
+				goto condutor1;
+			}
+			
+			//Confirmação
+			
+			
+			//Adicionar o condutor
+			empresa.atribuirCondutor(c_id, index, l_id, auto_id);
+
 			break;
-		case 2:
-			cerr << "Operação cancelada.\n";
-			_getch();
-
-			day_open = false;
-			goto redo;
 		}
-
-		istringstream stream_autocarro(input_autocarro);
-		stream_autocarro >> auto_id;
-
-		//Autocarro existe?
-		if (auto_id < 1 || auto_id > autocarros_da_linha.rbegin()->first)
+		case '2':
 		{
-			cerr << " Esse autocarro não existe. Escolha outro: ";
-			goto autocarro;
-		}
-		else if (empresa.getTrabalho().at(index)[l_id][auto_id].getCondutorID() != 0)
-		{
-			cerr << " Esse autocarro já tem um condutor atribuído. Escolha outro: ";
-			goto autocarro;
-		}
+			cout << " Qual o autocarro que pretende desatribuir o condutor? ";
+			
+		autocarro2:
+			getline(cin, input_autocarro);
 
-		cout << " Que condutor pretende atribuir o trabalho? ";
+			switch (inputErrorHandling(input_autocarro, 'i'))
+			{
+			case 0:
+				cerr << "Input inválido. Introduza novamente:";
+				goto autocarro2;
+			case 1:
+				break;
+			case 2:
+				cerr << "Operação cancelada.\n";
+				_getch();
 
-	condutor:
-		getline(cin, input_condutor);
+				day_open = false;
+				goto redo;
+			}
 
-		switch (inputErrorHandling(input_condutor, 'i'))
-		{
-		case 0:
-			cerr << "Input inválido. Introduza novamente:";
-			goto condutor;
-		case 1:
+			istringstream stream_autocarro(input_autocarro);
+			stream_autocarro >> auto_id;
+
+			//Autocarro existe?
+			if (auto_id < 1 || auto_id > autocarros_da_linha.rbegin()->first)
+			{
+				cerr << " Esse autocarro não existe. Escolha outro: ";
+				goto autocarro2;
+			}
+			else if (empresa.getTrabalho().at(index)[l_id][auto_id].getCondutorID() == 0)
+			{
+				cerr << " Esse autocarro não tem nenhum condutor atribuído. Escolha outro: ";
+				goto autocarro2;
+			}
+
+			c_id = empresa.getTrabalho().at(index)[l_id][auto_id].getCondutorID();
+
+			empresa.desatribuirCondutor(c_id, index, l_id, auto_id);
+
 			break;
-		case 2:
-			cerr << "Operação cancelada.\n";
-			_getch();
-
-			day_open = false;
-			goto redo;
+		}
+		default:
+			goto input;
 		}
 
-		istringstream stream_condutor(input_condutor);
-		stream_condutor >> c_id;
-
-		if (!inputExist(c_id, 'c'))
-		{
-			cerr << " Esse condutor não existe. Escolha outro: ";
-			goto condutor;
-		}
-
-		//Confirmação
-		
-
-		//Adicionar o condutor
-		empresa.atribuirCondutor(c_id, index, l_id, auto_id);
 		
 	}
 
@@ -620,3 +681,16 @@ string intDay(unsigned int day)
 		return "Domingo";
 	}
 }
+
+//void sortTrabalho(vector<Trabalho> &trab)
+//{
+//	vector<Trabalho> newVector;
+//
+//	for (size_t i = 0; true; i++)
+//	{
+//		if (trab.at(i).getInicio() < trab.at(i + 1).getInicio())
+//			continue;
+//	}
+//}
+
+

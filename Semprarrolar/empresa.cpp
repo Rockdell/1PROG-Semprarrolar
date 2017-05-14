@@ -2109,11 +2109,12 @@ void Empresa::beginAtribuicao()
 				Tempo inicio = tempos_saida.at(a);
 				Tempo fim = inicio;
 				fim.sumTempo(tempo_ida_volta);
-
-				Trabalho turno = Trabalho(i, it->first, a + 1, inicio, fim);
 				
+				//Primeiro autocarro a ser criado
 				if (newAutocarros.size() == 0)
 				{
+					Trabalho turno = Trabalho(i, it->first, 0, inicio, fim);
+
 					vector<Trabalho> newTurnos;
 
 					newTurnos.push_back(turno);
@@ -2122,11 +2123,15 @@ void Empresa::beginAtribuicao()
 				}
 				else
 				{
+					//Verificar se algum autocarro já existente, está disponível para este turno
 					for (mapAutocarro::iterator ot = newAutocarros.begin(); ot != newAutocarros.end(); ot++)
 					{
+						//O último turno do autocarro acaba antes deste?
 						if (ot->second.getTrabalho().back().getFim().getHora() < inicio.getHora() || (ot->second.getTrabalho().back().getFim().getHora() == inicio.getHora()) && (ot->second.getTrabalho().back().getFim().getMinuto() <= inicio.getMinuto()))
 						{
 							vector<Trabalho> trabalhoAutocarro = ot->second.getTrabalho();
+
+							Trabalho turno = Trabalho(i, it->first, ot->second.getOrdem(), inicio, fim);
 
 							trabalhoAutocarro.push_back(turno);
 
@@ -2135,13 +2140,18 @@ void Empresa::beginAtribuicao()
 							break;
 						}
 
+						//Caso nenhum autocarro esteja disponível, é criado um novo
 						if (ot->first == newAutocarros.rbegin()->first)
 						{
 							vector<Trabalho> newTurnos;
 
+							Trabalho turno = Trabalho(i, it->first, a + 1, inicio, fim);
+
 							newTurnos.push_back(turno);
 							Autocarro ac = Autocarro(it->first, 0, a + 1, newTurnos);
 							newAutocarros[a + 1] = ac;
+
+							break;
 						}
 					}
 				}
@@ -2167,7 +2177,12 @@ void Empresa::beginAtribuicao()
 		{
 			Trabalho trabalhoActual = trabalhoCondutor.at(i);
 
-			newVector.at(trabalhoActual.getDiaSemana())[trabalhoActual.getLinhaID()][trabalhoActual.getAutocarroID()].setCondutorID(it->first);
+			//Caso o condutor tenho dois trabalhos no mesmo autocarro (pois o autocarro pode ter turnos diferentes), avança
+			if (newVector.at(trabalhoActual.getDiaSemana())[trabalhoActual.getLinhaID()][trabalhoActual.getAutocarroID()].getCondutorID() != 0)
+				continue;
+			else
+				newVector.at(trabalhoActual.getDiaSemana())[trabalhoActual.getLinhaID()][trabalhoActual.getAutocarroID()].setCondutorID(it->first);
+
 		}
 	}
 
@@ -2195,12 +2210,45 @@ void Empresa::atribuirCondutor(unsigned int idCondutor, unsigned int dia, unsign
 		trabalhoCondutor.push_back(empresa.getTrabalho().at(dia)[idLinha][idAutocarro].getTrabalho().at(i));
 	}
 
-	//sort(trabalhoCondutor.begin(), trabalhoCondutor.end());
+	condutoresActual[idCondutor].setTrabalho(trabalhoCondutor);
+	empresa.setCondutores(condutoresActual);
+
+	cout << " Condutor atribuído com sucesso! \n";
+
+	return;
+}
+void Empresa::desatribuirCondutor(unsigned int idCondutor, unsigned int dia, unsigned int idLinha, unsigned int idAutocarro)
+{
+	//Vetor com o trabalho dos dias
+	vector<linhasDia> trabalhoActual = empresa.getTrabalho();
+
+	//Desatribuir o condutor ao autocarro
+	trabalhoActual.at(dia)[idLinha][idAutocarro].setCondutorID(0);
+	empresa.setTrabalho(trabalhoActual);
+
+	//Map de condutores actuais e vector do trabalho do condutor
+	mapCondutor condutoresActual = empresa.getCondutores();
+
+	//Desatribuir o turno ao condutor
+	vector<Trabalho> trabalhoCondutor = condutoresActual[idCondutor].getTrabalho();
+
+	for (size_t i = 0; i < trabalhoCondutor.size(); i++)
+	{
+		Trabalho trabalho_temp = trabalhoCondutor.at(i);
+
+		if (trabalho_temp.getDiaSemana() == dia && trabalho_temp.getLinhaID() == idLinha && trabalho_temp.getAutocarroID() == idAutocarro)
+		{
+			trabalhoCondutor.erase(trabalhoCondutor.begin() + i);
+			break;
+		}
+		else
+			continue;
+	}
 
 	condutoresActual[idCondutor].setTrabalho(trabalhoCondutor);
 	empresa.setCondutores(condutoresActual);
 
-	cout << " Condutor adicionado com sucesso! \n";
+	cout << " Condutor desatribuído com sucesso! \n";
 
 	return;
 }

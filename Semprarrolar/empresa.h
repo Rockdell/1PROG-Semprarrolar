@@ -61,6 +61,7 @@ public:
 
 	void beginAtribuicao();
 	void atribuirCondutor(unsigned int idCondutor, unsigned int dia, unsigned int idLinha, unsigned int idAutocarro);
+	void desatribuirCondutor(unsigned int idCondutor, unsigned int dia, unsigned int idLinha, unsigned int idAutocarro);
 
 private:
 	mapCondutor listaCondutores;

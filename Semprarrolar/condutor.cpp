@@ -82,8 +82,8 @@ void Condutor::showCondutor()
 		"\n Nome: " << this->nomeCondutor <<
 		"\n Horas turno: " << this->hturnoCondutor <<
 		"\n Horas semanais: " << this->hsemanaCondutor <<
-		"\n Horas de descanso: " << this->hdescansoCondutor <<
-		"\n Trabalho: "; this->showTrabalho(); cout << endl;
+		"\n Horas de descanso: " << this->hdescansoCondutor << endl;
+		this->showTrabalho(); cout << endl;
 	return;
 }
 void Condutor::showTrabalho()
@@ -92,21 +92,20 @@ void Condutor::showTrabalho()
 
 	if (trab.size() == 0)
 	{
-		cout << "Condutor não tem nenhum trabalho atribuido!" << endl;
+		cout << " Trabalho: nenhum trabalho atribuido" << endl;
 	}
 	else
 	{
 		for (unsigned int i = 0; i < trab.size(); i++)
 		{
 			Trabalho temp = trab.at(i);
+			cout << " Trabalho nº" << i + 1 << ": \n";
 			cout << " Dia de semana: " << intDay(temp.getDiaSemana()) << endl;
 			cout << " Linha: " << temp.getLinhaID() << endl;
 			cout << " Autocarro: " << temp.getAutocarroID() << endl;
 			cout << " Turno: " << temp.getInicio().showTempo() << " a " << temp.getFim().showTempo() << endl << endl;
 		}
 	}
-
-	_getch();
 
 	return;
 }

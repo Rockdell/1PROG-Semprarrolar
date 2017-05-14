@@ -24,14 +24,16 @@ redo:
 
 	clearScreen();
 
-	cout << "---MENU PRINCIPAL---\n";
+	cout << " ======================\n";
+	cout << " === MENU PRINCIPAL ===\n";
+	cout << " ======================\n\n";
 
 	if (file_open)
 	{
 		//Sempre que inicia o menu principal, actualiza o vectorTrabalho
 		empresa.beginAtribuicao();
 
-		cout << "(1) Linhas\n(2) Condutores\n(3) Informação\n(4) Atribuição de trabalho\n";
+		cout << " [1] Linhas\n [2] Condutores\n [3] Informação\n [4] Atribuição de trabalho\n [0] Cancelar\n\n";
 
 	erro1:
 		char input = _getch();
@@ -42,7 +44,7 @@ redo:
 		{
 			if (alterado_condutor || alterado_linha)
 			{
-				cout << "Pretende guardar as alterações? (Y/N)\n";
+				cout << " Pretende guardar as alterações? [Y/N]\n";
 
 			erro3:
 				char input = _getch();
@@ -55,23 +57,23 @@ redo:
 
 					if (alterado_condutor)
 					{
-						cout << "Ficheiro para guardar os condutores?"; getline(cin, filename_condutor);
+						cout << " Ficheiro para guardar os condutores: "; getline(cin, filename_condutor);
 						empresa.saveCondutores(filename_condutor);
 					}
 
 					if (alterado_linha)
 					{
-						cout << "Ficheiro para guardar as linhas?"; getline(cin, filename_linha);
+						cout << " Ficheiro para guardar as linhas: "; getline(cin, filename_linha);
 						empresa.saveLinhas(filename_linha);
 					}
 
-					cout << "O programa fechou e guardou as alterações";
+					cout << " O programa fechou e guardou as alterações! ";
 					_getch();
 					return;
 				}
 				case 'N':
 				{
-					cout << "O programa fechou sem guardar as alterações.\n";
+					cout << " O programa fechou sem guardar as alterações! ";
 					_getch();
 					return;
 				}
@@ -81,11 +83,10 @@ redo:
 			}
 			else
 			{
-				cout << "O programa fechou.\n";
+				cout << " O programa fechou! ";
 				_getch();
 				return;
 			}
-
 		}
 		case '1':
 			MenuLinhas();
@@ -102,12 +103,11 @@ redo:
 		default:
 			goto erro1;
 		}
-
 		goto redo;
 	}
 	else
 	{
-		cout << "(1) Abrir ficheiro de condutor e linha\n";
+		cout << " [1] Abrir ficheiro de condutor e linha\n\n";
 
 	erro2:
 		char input = _getch();
@@ -115,18 +115,28 @@ redo:
 		switch (input)
 		{
 		case '0':
+			cout << " O programa fechou! ";
+			_getch();
 			return;
 		case '1':
 		{
 			string filename_condutor, filename_linha;
 
-			cout << " Ficheiro de condutores? "; getline(cin, filename_condutor);
-			cout << " Ficheiro de linhas? "; getline(cin, filename_linha);
+			cout << " Ficheiro de condutores: "; getline(cin, filename_condutor);
+			cout << " Ficheiro de linhas: "; getline(cin, filename_linha);
 
 			empresa.fillCondutores(filename_condutor);
 			empresa.fillLinhas(filename_linha);
 
-			cout << " Condutores e linhas loaded! \n";
+			if (fail)
+			{
+				cout << "\n Ficheiro(s) não encontrado(s)\n";
+				_getch();
+
+				goto redo;
+			}
+
+			cout << "\n Condutores e linhas loaded! \n";
 			_getch();
 
 			file_open = true;
@@ -146,9 +156,11 @@ redo:
 
 	clearScreen();
 
-	cout << "---MENU LINHAS---\n";
+	cout << " ===================\n";
+	cout << " === MENU LINHAS ===\n";
+	cout << " ===================\n\n";
 
-	cout << "(1) Adicionar\n(2) Alterar\n(3) Remover\n";
+	cout << " [1] Adicionar linha\n [2] Alterar linha\n [3] Remover linha\n [0] Cancelar\n\n";
 
 erro:
 	char input = _getch();
@@ -178,9 +190,11 @@ redo:
 
 	clearScreen();
 
-	cout << "---MENU CONDUTORES---\n";
+	cout << " =======================\n";
+	cout << " === MENU CONDUTORES ===\n";
+	cout << " =======================\n\n";
 
-	cout << "(1) Adicionar\n(2) Alterar\n(3) Remover\n(4) Visualizar trabalho\n(5) Visualizar horas semanais\n";
+	cout << " [1] Adicionar condutor\n [2] Alterar condutor\n [3] Remover condutor\n [4] Ver trabalho do condutor\n [5] Ver horas semanais restantes\n [0] Cancelar\n\n";
 
 erro:
 	char input = _getch();
@@ -216,10 +230,12 @@ redo:
 
 	clearScreen();
 
-	cout << "---MENU INFORMAÇÂO---\n";
+	cout << " =======================\n";
+	cout << " === MENU INFORMAÇÂO ===\n";
+	cout << " =======================\n\n";
 
-	cout << " (1) Percurso entre duas paragens\n (2) Horário de uma linha\n (3) Horário de uma paragem\n (4) Inquirir paragem\n " <<
-		"(5) Informação de uma linha\n (6) Informação de um autocarro\n (7) Autocarros sem condutor\n\n";
+	cout << " [1] Percurso entre duas paragens\n [2] Horário da linha\n [3] Horário da paragem\n [4] Inquirir linhas sobre paragem\n " <<
+		"[5] Informação da linha\n [6] Informação do autocarro\n [7] Autocarros sem condutor\n\n";
 
 erro:
 	char input = _getch();
@@ -264,12 +280,15 @@ void MenuAtribuicao()
 redo:
 
 	clearScreen();
-	cout << "---MENU ATRIBUIÇÃO---\n";
+
+	cout << " =======================\n";
+	cout << " === MENU ATRIBUIÇÃO ===\n";
+	cout << " =======================\n\n";
 
 	if (!day_open)
 	{
-		cout << " Que dia da semana pretende selecionar? ";
-		cout << "\n (1) Segunda-feira\n (2) Terça-feira\n (3) Quarta-feira\n (4) Quinta-feira\n (5) Sexta-feira\n (6) Sábado\n (7) Domingo\n\n";
+		cout << " Que dia da semana pretende selecionar?\n";
+		cout << " [1] Segunda-feira\n [2] Terça-feira\n [3] Quarta-feira\n [4] Quinta-feira\n [5] Sexta-feira\n [6] Sábado\n [7] Domingo\n\n";
 
 	erro1:
 		char input = _getch();
@@ -332,14 +351,14 @@ redo:
 		//Linhas existentes
 		mapLinha lLinhas = empresa.getLinhas();
 
-		cout << "Linhas existentes:" << endl;
+		cout << " Linhas existentes:" << endl;
 
 		for (mapLinha::iterator it = lLinhas.begin(); it != lLinhas.end(); it++)
 		{
 			cout << it->second.getID() << endl;
 		}
 
-		cout << " \nQue linha pretende selecionar? ";
+		cout << "\n Que linha pretende selecionar? ";
 
 	id:
 		getline(cin, input_id);
@@ -347,13 +366,13 @@ redo:
 		switch (inputErrorHandling(input_id, 'i'))
 		{
 		case 0:
-			cerr << "Input inválido. Introduza novamente:";
+			cerr << " Input inválido. Introduza novamente: ";
 			goto id;
 		case 1:
 			break;
 		case 2:
 		{
-			cerr << "Operação cancelada.\n";
+			cerr << " Operação cancelada.\n";
 			_getch();
 			 
 			day_open = false;
@@ -366,7 +385,7 @@ redo:
 
 		if (!inputExist(l_id, 'l'))
 		{
-			cerr << " Essa linha não existe. Escolha outro: ";
+			cerr << " Essa linha não existe. Escolha outra: ";
 			goto id;
 		}
 
@@ -382,7 +401,7 @@ redo:
 
 			for (size_t i = 0; i < ac.getTrabalho().size(); i++)
 			{
-				cout << "Turno nº " << i + 1 << ": " << ac.getTrabalho().at(i).getInicio().showTempo() << " às " << ac.getTrabalho().at(i).getFim().showTempo() << endl;
+				cout << " Turno nº " << i + 1 << ": " << ac.getTrabalho().at(i).getInicio().showTempo() << " a " << ac.getTrabalho().at(i).getFim().showTempo() << endl;
 			}
 
 			if (ac.getCondutorID() == 0)
@@ -391,7 +410,7 @@ redo:
 				cout << " Condutor atribuído: " << empresa.getCondutores()[ac.getCondutorID()].getNome() << endl << endl;
 		}
 
-		cout << "\n (1) Atribuir condutor\n (2) Desatribuir condutor\n\n";
+		cout << " [1] Atribuir condutor\n [2] Desatribuir condutor\n\n";
 
 	input:
 		char input = _getch();
@@ -410,12 +429,12 @@ redo:
 			switch (inputErrorHandling(input_autocarro, 'i'))
 			{
 			case 0:
-				cerr << "Input inválido. Introduza novamente:";
+				cerr << " Input inválido. Introduza novamente:";
 				goto autocarro1;
 			case 1:
 				break;
 			case 2:
-				cerr << "Operação cancelada.\n";
+				cerr << " Operação cancelada.\n";
 				_getch();
 			
 				day_open = false;
@@ -445,12 +464,12 @@ redo:
 			switch (inputErrorHandling(input_condutor, 'i'))
 			{
 			case 0:
-				cerr << "Input inválido. Introduza novamente:";
+				cerr << " Input inválido. Introduza novamente:";
 				goto condutor1;
 			case 1:
 				break;
 			case 2:
-				cerr << "Operação cancelada.\n";
+				cerr << " Operação cancelada.\n";
 				_getch();
 			
 				day_open = false;
@@ -484,12 +503,12 @@ redo:
 			switch (inputErrorHandling(input_autocarro, 'i'))
 			{
 			case 0:
-				cerr << "Input inválido. Introduza novamente:";
+				cerr << " Input inválido. Introduza novamente:";
 				goto autocarro2;
 			case 1:
 				break;
 			case 2:
-				cerr << "Operação cancelada.\n";
+				cerr << " Operação cancelada.\n";
 				_getch();
 
 				day_open = false;
@@ -520,8 +539,6 @@ redo:
 		default:
 			goto input;
 		}
-
-		
 	}
 
 	_getch();
@@ -679,6 +696,8 @@ string intDay(unsigned int day)
 		return "Sábado";
 	case 6:
 		return "Domingo";
+	default:
+		return "null";
 	}
 }
 

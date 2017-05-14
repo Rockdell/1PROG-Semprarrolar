@@ -94,8 +94,16 @@ void Empresa::fillCondutores(string filename)
 
 		file.close();
 	}
+	else
+	{		
+		fail = true;
+
+		return;
+	}
 
 	empresa.setCondutores(newCondutores);
+
+	return;
 }
 void Empresa::fillLinhas(string filename)
 {
@@ -224,8 +232,16 @@ void Empresa::fillLinhas(string filename)
 
 		file.close();
 	}
+	else
+	{
+		fail = true;
+
+		return;
+	}
 
 	empresa.setLinhas(newLinhas);
+
+	return;
 }
 
 void Empresa::saveCondutores(string filename)
@@ -289,7 +305,7 @@ void Empresa::createLinha()
 	string input_paragem;
 	string input_tempo;
 
-	cout << endl << " ID? ";
+	cout << " ID? ";
 
 id:
 	getline(cin, input_id);
@@ -297,12 +313,12 @@ id:
 	switch (inputErrorHandling(input_id, 'i'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente: ";
 		goto id;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -324,12 +340,12 @@ frequencia:
 	switch (inputErrorHandling(input_freq, 'n'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto frequencia;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << " Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -337,7 +353,7 @@ frequencia:
 	istringstream stream_freq(input_freq);
 	stream_freq >> l_freq;
 
-	cout << endl << " Lista de paragens (CTRL-Z para terminar): " << endl;
+	cout << "\n Lista de paragens (CTRL-Z para terminar): " << endl;
 	unsigned int cont_p = 0;
 
 paragens:
@@ -354,12 +370,12 @@ paragens:
 	switch (inputErrorHandling(input_paragem, 'p'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto paragens;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -375,7 +391,7 @@ paragens:
 	goto paragens;
 
 endparagens:
-	cout << " Lista dos tempos entre paragens: " << endl;
+	cout << "\n Lista dos tempos entre paragens: " << endl;
 	int cont_t = 0;
 
 tempo:
@@ -390,12 +406,12 @@ tempo:
 		switch (inputErrorHandling(input_tempo, 'n'))
 		{
 		case 0:
-			cerr << "Input inválido. Introduza novamente:";
+			cerr << " Input inválido. Introduza novamente:";
 			goto tempo;
 		case 1:
 			break;
 		case 2:
-			cerr << "Operação cancelada.\n";
+			cerr << "\n Operação cancelada.\n";
 			_getch();
 			return;
 		}
@@ -430,14 +446,14 @@ void Empresa::modifyLinha()
 
 	mapLinha lLinhas = empresa.getLinhas();
 
-	cout << "Linhas existentes:" << endl;
+	cout << " Linhas existentes:" << endl;
 
 	for (mapLinha::iterator i = lLinhas.begin(); i != lLinhas.end(); i++)
 	{
-		cout << i->second.getID() << endl;
+		cout << " " << i->second.getID() << endl;
 	}
 
-	cout << " \nQue linha pretende alterar? ";
+	cout << "\n Que linha pretende alterar? ";
 
 id:
 	getline(cin, input_id);
@@ -445,12 +461,12 @@ id:
 	switch (inputErrorHandling(input_id, 'i'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto id;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -460,7 +476,7 @@ id:
 
 	if (!inputExist(l_id, 'l'))
 	{
-		cerr << " Essa linha não existe. Escolha outro: ";
+		cerr << " Essa linha não existe. Escolha outra: ";
 		goto id;
 	}
 
@@ -470,10 +486,10 @@ id:
 	it->second.showLinha();
 
 	cout << " Que propriedade pretende alterar?\n\n" <<
-		" [#1] ID\n" <<
-		" [#2] Frequência\n" <<
-		" [#3] Paragens\n" <<
-		" [#4] Tempos\n\n";
+		" [1] ID\n" <<
+		" [2] Frequência\n" <<
+		" [3] Paragens\n" <<
+		" [4] Tempos\n\n";
 	cout << " Escolha uma opção!\n\n";
 
 erro:
@@ -501,12 +517,12 @@ erro:
 		switch (inputErrorHandling(alt_id, 'i'))
 		{
 		case 0:
-			cerr << "Input inválido. Introduza novamente:";
+			cerr << " Input inválido. Introduza novamente: ";
 			goto a_id;
 		case 1:
 			break;
 		case 2:
-			cerr << "Operação cancelada.\n";
+			cerr << "\n Operação cancelada.\n";
 			_getch();
 			return;
 		}
@@ -520,7 +536,12 @@ erro:
 			goto a_id;
 		}
 
-		it->second.setID(new_id);
+		Linha temp = it->second;
+		temp.setID(new_id);
+
+		newLinhas.erase(it->first);
+
+		newLinhas[new_id] = temp;
 
 		alterado_linha = true;
 
@@ -540,12 +561,12 @@ erro:
 		switch (inputErrorHandling(alt_freq, 'n'))
 		{
 		case 0:
-			cerr << "Input inválido. Introduza novamente:";
+			cerr << " Input inválido. Introduza novamente: ";
 			goto a_frequencia;
 		case 1:
 			break;
 		case 2:
-			cerr << "Operação cancelada.\n";
+			cerr << "\n Operação cancelada.\n";
 			_getch();
 			return;
 		}
@@ -582,12 +603,12 @@ erro:
 		switch (inputErrorHandling(alt_paragens, 'p'))
 		{
 		case 0:
-			cerr << "Input inválido. Introduza novamente:";
+			cerr << " Input inválido. Introduza novamente: ";
 			goto a_paragem;
 		case 1:
 			break;
 		case 2:
-			cerr << "Operação cancelada.\n";
+			cerr << "\n Operação cancelada.\n";
 			_getch();
 			return;
 		}
@@ -641,7 +662,7 @@ erro:
 		switch (inputErrorHandling(alt_tempos, 'n'))
 		{
 		case 0:
-			cerr << "Input inválido. Introduza novamente:";
+			cerr << " Input inválido. Introduza novamente: ";
 			goto a_tempos;
 		case 1:
 		{
@@ -652,7 +673,7 @@ erro:
 			goto a_tempos;
 		}
 		case 2:
-			cerr << "Operação cancelada.\n";
+			cerr << "\n Operação cancelada.\n";
 			_getch();
 			return;
 		}
@@ -663,7 +684,7 @@ erro:
 			vector<string> temp(new_tempo.size() + 1, "null");
 			it->second.setParagens(temp);
 
-			cout << " Reset das paragens desta linha! Não se esqueça de preenchê-las.\n";
+			cout << "\n Reset das paragens desta linha! Não se esqueça de preenchê-las.\n";
 		}
 
 		it->second.setTempos(new_tempo);
@@ -678,7 +699,7 @@ erro:
 
 	empresa.setLinhas(newLinhas);
 
-	cout << " A linha foi alterada com sucesso.\n.";
+	cout << "\n A linha foi alterada com sucesso. \n";
 	_getch();
 
 	return;
@@ -690,14 +711,14 @@ void Empresa::removeLinha()
 
 	mapLinha lLinhas = empresa.getLinhas();
 
-	cout << "Linhas existentes:" << endl;
+	cout << " Linhas existentes: \n";
 
 	for (mapLinha::iterator i = lLinhas.begin(); i != lLinhas.end(); i++)
 	{
-		cout << i->second.getID() << endl;
+		cout << " " << i->second.getID() << endl;
 	}
 
-	cout << " \nQue linha pretende remover? ";
+	cout << "\n Que linha pretende remover? ";
 
 id:
 	getline(cin, input_id);
@@ -705,12 +726,12 @@ id:
 	switch (inputErrorHandling(input_id, 'i'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto id;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -724,7 +745,7 @@ id:
 		goto id;
 	}
 
-	cout << " Tem a certeza que quer eliminar esta linha? (Y/N)\n";
+	cout << "\n Tem a certeza que quer eliminar esta linha? [Y/N] \n";
 
 confirmation:
 	char input_confirmation = _getch();
@@ -734,7 +755,7 @@ confirmation:
 	case 'Y':
 		break;
 	case 'N':
-		cout << " Operação cancelada.\n";
+		cout << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	default:
@@ -775,12 +796,12 @@ id:
 	switch (inputErrorHandling(input_id, 'i'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente: ";
 		goto id;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -802,12 +823,12 @@ nome1:
 	switch (inputErrorHandling(input_nome1, 's'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto nome1;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -825,12 +846,12 @@ nome2:
 	switch (inputErrorHandling(input_nome2, 's'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto nome2;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -849,12 +870,12 @@ turno:
 	switch (inputErrorHandling(input_hturno, 'n'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto turno;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -870,12 +891,12 @@ semana:
 	switch (inputErrorHandling(input_hsemana, 'n'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto semana;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -891,12 +912,12 @@ descanso:
 	switch (inputErrorHandling(input_hdescanso, 'n'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto descanso;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -926,14 +947,14 @@ void Empresa::modifyCondutor()
 
 	mapCondutor cCondutores = empresa.getCondutores();
 
-	cout << "Condutores existentes:" << endl;
+	cout << " Condutores existentes:" << endl;
 
 	for (mapCondutor::iterator i = cCondutores.begin(); i != cCondutores.end(); i++)
 	{
-		cout << i->second.getID() << endl;
+		cout << " " << i->second.getID() << endl;
 	}
 
-	cout << " \nQue condutor pretende alterar? ";
+	cout << "\n Que condutor pretende alterar? ";
 
 id:
 	getline(cin, input_id);
@@ -941,12 +962,12 @@ id:
 	switch (inputErrorHandling(input_id, 'i'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto id;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -965,12 +986,12 @@ id:
 	mapCondutor::iterator it = newCondutores.find(c_id);
 	it->second.showCondutor();
 
-	cout << " Que propriedade pretende alterar?\n" << endl <<
-		" (1) ID\n" <<
-		" (2) Nome\n" <<
-		" (3) Horas turno\n" <<
-		" (4) Horas semanais\n" <<
-		" (5) Horas de descanso\n\n";
+	cout << " Que propriedade pretende alterar?\n\n" <<
+		" [1] ID\n" <<
+		" [2] Nome\n" <<
+		" [3] Horas turno\n" <<
+		" [4] Horas semanais\n" <<
+		" [5] Horas de descanso\n\n";
 	cout << " Escolha um opção!\n\n";
 
 erro:
@@ -980,7 +1001,7 @@ erro:
 	{
 	case '0':
 	{
-		cout << " Operação cancelada.\n";
+		cout << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -998,12 +1019,12 @@ erro:
 		switch (inputErrorHandling(alt_id, 'i'))
 		{
 		case 0:
-			cerr << "Input inválido. Introduza novamente:";
+			cerr << " Input inválido. Introduza novamente:";
 			goto a_id;
 		case 1:
 			break;
 		case 2:
-			cerr << "Operação cancelada.\n";
+			cerr << "\n Operação cancelada.\n";
 			_getch();
 			return;
 		}
@@ -1017,7 +1038,12 @@ erro:
 			goto a_id;
 		}
 
-		it->second.setID(new_id);
+		Condutor temp = it->second;
+		temp.setID(new_id);
+
+		newCondutores.erase(it->first);
+
+		newCondutores[new_id] = temp;
 
 		alterado_condutor = true;
 
@@ -1040,12 +1066,12 @@ erro:
 		switch (inputErrorHandling(alt_nome1, 's'))
 		{
 		case 0:
-			cerr << "Input inválido. Introduza novamente:";
+			cerr << " Input inválido. Introduza novamente:";
 			goto a_nome1;
 		case 1:
 			break;
 		case 2:
-			cerr << "Operação cancelada.\n";
+			cerr << "\n Operação cancelada.\n";
 			_getch();
 			return;
 		}
@@ -1062,12 +1088,12 @@ erro:
 		switch (inputErrorHandling(alt_nome2, 's'))
 		{
 		case 0:
-			cerr << "Input inválido. Introduza novamente:";
+			cerr << " Input inválido. Introduza novamente:";
 			goto a_nome2;
 		case 1:
 			break;
 		case 2:
-			cerr << "Operação cancelada.\n";
+			cerr << "\n Operação cancelada.\n";
 			_getch();
 			return;
 		}
@@ -1096,12 +1122,12 @@ erro:
 		switch (inputErrorHandling(alt_hturno, 'n'))
 		{
 		case 0:
-			cerr << "Input inválido. Introduza novamente:";
+			cerr << " Input inválido. Introduza novamente:";
 			goto a_turno;
 		case 1:
 			break;
 		case 2:
-			cerr << "Operação cancelada.\n";
+			cerr << "\n Operação cancelada.\n";
 			_getch();
 			return;
 		}
@@ -1129,12 +1155,12 @@ erro:
 		switch (inputErrorHandling(alt_hsemana, 'n'))
 		{
 		case 0:
-			cerr << "Input inválido. Introduza novamente:";
+			cerr << " Input inválido. Introduza novamente:";
 			goto a_semana;
 		case 1:
 			break;
 		case 2:
-			cerr << "Operação cancelada.\n";
+			cerr << "\n Operação cancelada.\n";
 			_getch();
 			return;
 		}
@@ -1162,12 +1188,12 @@ erro:
 		switch (inputErrorHandling(alt_hdescanso, 'n'))
 		{
 		case 0:
-			cerr << "Input inválido. Introduza novamente:";
+			cerr << " Input inválido. Introduza novamente:";
 			goto a_descanso;
 		case 1:
 			break;
 		case 2:
-			cerr << "Operação cancelada.\n";
+			cerr << "\n Operação cancelada.\n";
 			_getch();
 			return;
 		}
@@ -1187,7 +1213,7 @@ erro:
 
 	empresa.setCondutores(newCondutores);
 
-	cout << " O condutor foi alterado com sucesso.\n.";
+	cout << "\n O condutor foi alterado com sucesso.\n";
 	_getch();
 
 	return;
@@ -1199,14 +1225,14 @@ void Empresa::removeCondutor()
 
 	mapCondutor cCondutores = empresa.getCondutores();
 
-	cout << "Condutores existentes:" << endl;
+	cout << " Condutores existentes:" << endl;
 
 	for (mapCondutor::iterator i = cCondutores.begin(); i != cCondutores.end(); i++)
 	{
 		cout << i->second.getID() << endl;
 	}
 
-	cout << " \nQue condutor pretende remover? ";
+	cout << "\n Que condutor pretende remover? ";
 
 id:
 	getline(cin, input_id);
@@ -1214,12 +1240,12 @@ id:
 	switch (inputErrorHandling(input_id, 'i'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto id;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -1233,7 +1259,7 @@ id:
 		goto id;
 	}
 
-	cout << " Tem a certeza que quer eliminar este condutor? (Y/N)\n";
+	cout << "\n Tem a certeza que quer eliminar este condutor? [Y/N]\n";
 
 confirmation:
 	char input_confirmation = _getch();
@@ -1243,7 +1269,7 @@ confirmation:
 	case 'Y':
 		break;
 	case 'N':
-		cout << " Operação cancelada.\n";
+		cout << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	default:
@@ -1270,14 +1296,14 @@ void Empresa::horarioLinha()
 
 	mapLinha lLinhas = empresa.getLinhas();
 
-	cout << "Linhas existentes:" << endl;
+	cout << " Linhas existentes:" << endl;
 
 	for (mapLinha::iterator i = lLinhas.begin(); i != lLinhas.end(); i++)
 	{
-		cout << i->second.getID() << endl;
+		cout << " " << i->second.getID() << endl;
 	}
 
-	cout << " \nQue linha pretende visualizar o horário? ";
+	cout << "\n Que linha pretende visualizar o horário? ";
 
 id:
 	getline(cin, input_id);
@@ -1285,12 +1311,12 @@ id:
 	switch (inputErrorHandling(input_id, 'i'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto id;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -1309,7 +1335,7 @@ id:
 	//Output inicial
 	string sentido_normal = l.getParagens().at(0);
 	string sentido_inverso = l.getParagens().at(l.getParagens().size() - 1);
-	cout << endl << " (1) Partida de " << sentido_normal << "\n (2) Partida de " << sentido_inverso << "? \n\n";
+	cout << endl << " [1] Partida de " << sentido_normal << "\n [2] Partida de " << sentido_inverso << "? \n\n";
 	cout << " Escolha um opção! \n\n";
 
 erro:
@@ -1318,7 +1344,7 @@ erro:
 	switch (input)
 	{
 	case '0':
-		cout << " Operação cancelada.\n";
+		cout << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	case '1':
@@ -1346,7 +1372,7 @@ void Empresa::horarioParagem()
 	typedef tuple <unsigned int, vector <Tempo>, vector <Tempo> > parNormInv;
 	vector<parNormInv> vectorOutput;
 
-	cout << " Paragem?";
+	cout << " Paragem? ";
 
 paragem:
 	getline(cin, input_paragem);
@@ -1354,12 +1380,12 @@ paragem:
 	switch (inputErrorHandling(input_paragem, 'p'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto paragem;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -1479,6 +1505,8 @@ paragem:
 		vectorOutput.push_back(linhaOutput);
 	}
 
+	cout << endl;
+
 	//Output
 	for (size_t p = 0; p < vectorOutput.size(); p++)
 	{
@@ -1525,12 +1553,12 @@ paragem_inicial:
 	switch (inputErrorHandling(start, 'p'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto paragem_inicial;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -1542,7 +1570,7 @@ paragem_inicial:
 		goto paragem_inicial;
 	}
 
-	cout << " Qual é a paragem final? ";
+	cout << "\n Qual é a paragem final? ";
 
 paragem_final:
 	getline(cin, finish);
@@ -1550,12 +1578,12 @@ paragem_final:
 	switch (inputErrorHandling(finish, 'p'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto paragem_final;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -1691,12 +1719,12 @@ input:
 	switch (inputErrorHandling(input_paragem, 'p'))
 	{
 	case 0:
-		cerr << "Input inválido. Paragem que pretende procurar? ";
+		cerr << " Input inválido. Paragem que pretende procurar? ";
 		goto input;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -1711,7 +1739,7 @@ input:
 
 		for (size_t i = 0; i < linhas_com_paragem.size(); i++)
 		{
-			cout << "> " << linhas_com_paragem.at(i) << endl;
+			cout << " " << linhas_com_paragem.at(i) << endl;
 		}
 	}
 
@@ -1728,14 +1756,14 @@ void Empresa::infoLinha()
 
 	mapLinha lLinhas = empresa.getLinhas();
 
-	cout << "Linhas existentes:" << endl;
+	cout << " Linhas existentes:" << endl;
 
 	for (mapLinha::iterator i = lLinhas.begin(); i != lLinhas.end(); i++)
 	{
-		cout << i->second.getID() << endl;
+		cout << " " << i->second.getID() << endl;
 	}
 
-	cout << " \nQue linha pretende pretende visualizar? ";
+	cout << "\n Que linha pretende pretende visualizar? ";
 
 id:
 	getline(cin, input_id);
@@ -1743,12 +1771,12 @@ id:
 	switch (inputErrorHandling(input_id, 'i'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto id;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -1758,7 +1786,7 @@ id:
 
 	if (!inputExist(l_id, 'l'))
 	{
-		cerr << " Essa linha não existe. Escolha outro: ";
+		cerr << " Essa linha não existe. Escolha outra: ";
 		goto id;
 	}
 
@@ -1779,14 +1807,14 @@ void Empresa::trabalhoCondutor()
 
 	mapCondutor cCondutores = empresa.getCondutores();
 
-	cout << "Condutores existentes:" << endl;
+	cout << " Condutores existentes:" << endl;
 
 	for (mapCondutor::iterator i = cCondutores.begin(); i != cCondutores.end(); i++)
 	{
 		cout << i->second.getID() << endl;
 	}
 
-	cout << " \nPretende visualizar o trabalho de qual condutor? ";
+	cout << "\n Pretende visualizar o trabalho de qual condutor? ";
 
 id:
 	getline(cin, input_id);
@@ -1794,12 +1822,12 @@ id:
 	switch (inputErrorHandling(input_id, 'i'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto id;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -1820,23 +1848,23 @@ id:
 
 	c.showTrabalho();
 
+	_getch();
+
 	return;
 }
 void Empresa::trabalhoCondutorLeft()
 {
 	mapCondutor temp_c = empresa.getCondutores();
 
-	cout << endl;
-
 	for (mapCondutor::iterator i = temp_c.begin(); i != temp_c.end(); i++)
 	{
 		vector<Trabalho> temp_trab = i->second.getTrabalho();
 
-		cout << i->second.getNome() << " - ";
+		cout << " " << i->second.getNome() << " - ";
 
 		if (temp_trab.size() == 0)
 		{
-			cout << "Condutor sem trabalho atribuido!";
+			cout << " nenhum trabalho atribuido!";
 			goto fim;
 		}
 		else
@@ -1855,17 +1883,16 @@ void Empresa::trabalhoCondutorLeft()
 
 			if (total == min_semana)
 			{
-				cout << "Semana Completa!";
+				cout << " Semana Completa!";
 			}
 			else if (total < min_semana)
 			{
-				cout << "Faltam  aproximadamente " << (min_semana - total) / 60 << " horas (" << min_semana - total << " minutos) para completar a semana.";
+				cout << " Faltam  aproximadamente " << (min_semana - total) / 60 << " horas (" << min_semana - total << " minutos) para completar a semana.";
 			}
 
 			cout << endl;
 		}
 	}
-
 
 fim:
 
@@ -1882,7 +1909,7 @@ void Empresa::infoAutocarro()
 	unsigned int linha_id;
 	unsigned int auto_id;
 
-	cout << " Qual é o dia do autocarro? (Segunda-feira = 1, ... , Domingo = 7) ";
+	cout << " Qual é o dia do autocarro? [Segunda-feira = 1, Terça-feira = 2, ... , Domingo = 7] ";
 
 input_d:
 	getline(cin, input_dia);
@@ -1890,12 +1917,12 @@ input_d:
 	switch (inputErrorHandling(input_dia, 'n'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto input_d;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -1921,10 +1948,10 @@ input_d:
 
 	for (mapLinha::iterator it = lLinhas.begin(); it != lLinhas.end(); it++)
 	{
-		cout << it->second.getID() << endl;
+		cout << " " << it->second.getID() << endl;
 	}
 
-	cout << " Qual a linha do autocarro? ";
+	cout << "\n Qual a linha do autocarro? ";
 
 input_l:
 	getline(cin, input_linha);
@@ -1932,12 +1959,12 @@ input_l:
 	switch (inputErrorHandling(input_linha, 'i'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto input_l;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -1947,7 +1974,7 @@ input_l:
 
 	if (!inputExist(linha_id, 'l'))
 	{
-		cerr << " Essa linha não existe. Escolha outro: ";
+		cerr << " Essa linha não existe. Escolha outra: ";
 		goto input_l;
 	}
 
@@ -1961,7 +1988,7 @@ input_l:
 		cout << " Autocarro nº " << it->first << endl;
 	}
 	
-	cout << " Qual o autocarro que pretende visualizar? ";
+	cout << "\n Qual o autocarro que pretende visualizar? ";
 
 input_a:
 	getline(cin, input_auto);
@@ -1969,12 +1996,12 @@ input_a:
 	switch (inputErrorHandling(input_auto, 'i'))
 	{
 	case 0:
-		cerr << "Input inválido. Introduza novamente:";
+		cerr << " Input inválido. Introduza novamente:";
 		goto input_a;
 	case 1:
 		break;
 	case 2:
-		cerr << "Operação cancelada.\n";
+		cerr << "\n Operação cancelada.\n";
 		_getch();
 		return;
 	}
@@ -2006,7 +2033,7 @@ input_a:
 	//Output dos turnos
 	for (size_t i = 0; i < ac.getTrabalho().size(); i++)
 	{
-		cout << "Turno nº " << i + 1 << ": " << ac.getTrabalho().at(i).getInicio().showTempo() << " às " << ac.getTrabalho().at(i).getFim().showTempo() << endl;
+		cout << " Turno nº " << i + 1 << ": " << ac.getTrabalho().at(i).getInicio().showTempo() << " às " << ac.getTrabalho().at(i).getFim().showTempo() << endl;
 	}
 
 	_getch();
@@ -2032,10 +2059,8 @@ void Empresa::trabalhoAutocarroLeft()
 					cout << " Autocarro nº " << a->second.getOrdem() << endl;
 				}
 			}
-
 			cout << endl;
 		}
-
 		cout << endl;
 	}
 

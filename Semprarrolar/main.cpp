@@ -1,14 +1,3 @@
-/*
-COMENTÁRIOS IMPORTANTES:
-
-- Adicionar foreach em vez de for para fazer iterate nos maps
-- O showHorario vai para a library ou fica na empresa?
-
-04/Maio/2017
-- Alterei a classe trabalho para "tempo"
-
-*/
-
 #include <iostream>
 #include <conio.h>
 
@@ -25,6 +14,7 @@ const Tempo T_FIM = Tempo(H_FIM, M_FIM);
 
 //Variáveis boleanas
 bool file_open = false;
+bool fail = false;
 
 bool alterado_condutor = false;
 bool alterado_linha = false;

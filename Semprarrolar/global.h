@@ -8,13 +8,17 @@
 
 using namespace std;
 
+extern char ESC_CHAR;
+
 //Inicio e fim do horário de trabalho
 extern const unsigned int H_INICIO, M_INICIO;
 extern const Tempo T_INICIO;
 extern const unsigned int H_FIM, M_FIM;
 extern const Tempo T_FIM;
 
+//Variáveis boleanas
 extern bool file_open;
+extern bool fail;
 
 extern bool alterado_condutor;
 extern bool alterado_linha;

@@ -429,12 +429,12 @@ redo:
 			switch (inputErrorHandling(input_autocarro, 'i'))
 			{
 			case 0:
-				cerr << " Input inválido. Introduza novamente:";
+				cerr << " Input inválido. Introduza novamente: ";
 				goto autocarro1;
 			case 1:
 				break;
 			case 2:
-				cerr << " Operação cancelada.\n";
+				cerr << "\n Operação cancelada.\n";
 				_getch();
 			
 				day_open = false;
@@ -464,12 +464,12 @@ redo:
 			switch (inputErrorHandling(input_condutor, 'i'))
 			{
 			case 0:
-				cerr << " Input inválido. Introduza novamente:";
+				cerr << " Input inválido. Introduza novamente: ";
 				goto condutor1;
 			case 1:
 				break;
 			case 2:
-				cerr << " Operação cancelada.\n";
+				cerr << "\n Operação cancelada.\n";
 				_getch();
 			
 				day_open = false;
@@ -485,8 +485,16 @@ redo:
 				goto condutor1;
 			}
 			
-			//Confirmação
-			
+			//Confirmação aqui:
+
+			//Adicionar aqui o algoritmo que deixa (ou não) atribuir o autocarro ao condutor
+			//ATENÇAO -  os autocarros tem vários turnos. É preciso contar os minutos totais do autocarro e depois ver se o condutor pode aceita-lo
+
+			//Confirmações a fazer (pelo menos)
+			//1 - Daily_Max_Time >= New_Shift_Time + other_same_day_shit_times;
+			//2 - Max_week_time >= new_shift_time + other_shifts_times;
+			//3 - Driver can't have any shifts in the same day that conflict;
+			//4 - Rest Time between shifts must be respected;
 			
 			//Adicionar o condutor
 			empresa.atribuirCondutor(c_id, index, l_id, auto_id);

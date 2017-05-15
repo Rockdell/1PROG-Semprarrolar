@@ -73,6 +73,7 @@ void Linha::showLinha()
 		"\n Frequência: " << this->frequenciaLinha <<
 		"\n Paragens: ";
 
+	//Output das paragens
 	for (size_t i = 0; i < this->paragensLinha.size(); i++)
 	{
 		if (i == this->paragensLinha.size() - 1)
@@ -81,6 +82,7 @@ void Linha::showLinha()
 			cout << this->paragensLinha.at(i) << ", ";
 	}
 
+	//Output dos tempos
 	for (size_t i = 0; i < this->temposLinha.size(); i++)
 	{
 		if (i == this->temposLinha.size() - 1)

@@ -1727,9 +1727,9 @@ paragem_final:
 			if (l_s.getID() == l_f.getID())
 				continue;
 
-			for (size_t a = 0; a < l_s.getParagens().size(); a++)
+			for (unsigned int a = 0; a < l_s.getParagens().size(); a++)
 			{
-				for (size_t b = 0; b < l_f.getParagens().size(); b++)
+				for (unsigned int b = 0; b < l_f.getParagens().size(); b++)
 				{
 					if (compararCaseInsensitive(l_s.getParagens().at(a), l_f.getParagens().at(b)))
 					{
@@ -1876,7 +1876,7 @@ paragem_final:
 						percurso += " -> " + inversoParagens.at(z + 1);
 
 						//Linha a fazer cout
-						string output = "\n Linha: " + to_string(idLinha_start) + " e " + to_string(idLinha_finish) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
+						string output = "\n Linha: " + to_string(idLinha_start) + " -> " + to_string(idLinha_finish) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
 
 						opcoes[sumTempos] = output;
 					}
@@ -1900,7 +1900,7 @@ paragem_final:
 						percurso += " -> " + lLinhas[idLinha_finish].getParagens().at(z + 1);
 
 						//Linha a fazer cout
-						string output = "\n Linha: " + to_string(idLinha_start) + " e " + to_string(idLinha_finish) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
+						string output = "\n Linha: " + to_string(idLinha_start) + " -> " + to_string(idLinha_finish) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
 
 						opcoes[sumTempos] = output;
 
@@ -1961,7 +1961,7 @@ paragem_final:
 						percurso += " -> " + inversoParagens.at(z + 1);
 
 						//Linha a fazer cout
-						string output = "\n Linha: " + to_string(idLinha_start) + " e " + to_string(idLinha_finish) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
+						string output = "\n Linha: " + to_string(idLinha_start) + " -> " + to_string(idLinha_finish) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
 
 						opcoes[sumTempos] = output;
 
@@ -1986,7 +1986,7 @@ paragem_final:
 						percurso += " -> " + lLinhas[idLinha_finish].getParagens().at(z + 1);
 
 						//Linha a fazer cout
-						string output = "\n Linha: " + to_string(idLinha_start) + " e " + to_string(idLinha_finish) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
+						string output = "\n Linha: " + to_string(idLinha_start) + " -> " + to_string(idLinha_finish) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
 
 						opcoes[sumTempos] = output;
 

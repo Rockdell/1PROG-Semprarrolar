@@ -8,8 +8,6 @@
 
 using namespace std;
 
-extern char ESC_CHAR;
-
 //Inicio e fim do horário de trabalho
 extern const unsigned int H_INICIO, M_INICIO;
 extern const Tempo T_INICIO;

@@ -1,2 +1,0 @@
-201 ; 20 ; Foz, Matosinhos, FEUP, ISEP, Aliados ; 5, 5, 5, 5
-202 ; 15 ; Paranhos, ISEP, Freixo, Gaia, 7 Bicas ; 5, 5, 5, 5

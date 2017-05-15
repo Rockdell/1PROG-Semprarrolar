@@ -492,17 +492,17 @@ redo:
 				goto condutor1;
 			}
 			
-			//Variaveis mais acessiveis
-			int turno = empresa.getCondutores()[c_id].getTurno();
-			int semana = empresa.getCondutores()[c_id].getSemana();
-			int descanso = empresa.getCondutores()[c_id].getDescanso();
+			//Variaveis que vão ser precisas
+			unsigned int turno = empresa.getCondutores()[c_id].getTurno();
+			unsigned int semana = empresa.getCondutores()[c_id].getSemana();
+			unsigned int descanso = empresa.getCondutores()[c_id].getDescanso();
 			vector<Trabalho> trabalhos = empresa.getCondutores()[c_id].getTrabalho();
 			vector<Trabalho> driver_trab;
 
 			Autocarro bus = empresa.getTrabalho().at(index)[l_id][auto_id];
 			vector<Trabalho> bus_trab = bus.getTrabalho();
 
-			//Trabalhos existentes no dia que selecionou (condutor)
+			//Trabalhos existentes do condutor, no dia que selecionou
 			for (unsigned int n = 0; n < trabalhos.size(); n++)
 			{
 				int dia = trabalhos.at(n).getDiaSemana();
@@ -514,60 +514,58 @@ redo:
 			//Total de horas/minutos atribuidas ao condutor e ao autocarro
 			unsigned int minutos_semana = semana * 60;
 			unsigned int minutos_turno = turno * 60;
-			unsigned int total_c = 0;
-			unsigned int total_a = 0;
+			unsigned int minutos_descanso = descanso * 60;
+			unsigned int total_condutor = 0;
+			unsigned int total_autocarro = 0;
 
-			//Tempo que o condutor trabalha durante a semana toda (tempo semanal atual do condutor)
+			//Tempo que o condutor trabalha durante a semana toda (tempo semanaldo condutor em minutos)
 			for (unsigned int n = 0; n < trabalhos.size(); n++)
 			{
 				Tempo inicio = trabalhos.at(n).getInicio();
 				Tempo fim = trabalhos.at(n).getFim();
 
-				total_c += fim.subtractTempo(inicio);
+				total_condutor += fim.subtractTempo(inicio);
 			}
 
-			//Tempo dos turnos do autocarro
+			//Tempo total de todos os turnos do autocarro
 			for (unsigned int n = 0; n < bus_trab.size(); n++)
 			{
 				Tempo inicio = bus_trab.at(n).getInicio();
 				Tempo fim = bus_trab.at(n).getFim();
 
-				total_a += fim.subtractTempo(inicio);
+				total_autocarro += fim.subtractTempo(inicio);
 			}
 
-			//Verifica se ultrapassa as horas semanais e se o turno do autocarro é maior que o turno do condutor 
-			if (total_c + total_a > minutos_semana /*|| total_a > minutos_turno*/)
+			//Verifica se ultrapassa a hora máxima semanal e a hora máxima por turno do condutor 
+			if (total_condutor + total_autocarro > minutos_semana || total_autocarro > minutos_turno)
 			{
-				cout << " Erro ao atribuir o trabalho a este condutor. Escolha outro: " << endl;
+				cout << " Erro ao atribuir o trabalho a este condutor. Escolha outro: ";
 				goto condutor1;
 			}
 
 			//Verifica se existe conflito de turnos (horas)
 			for (unsigned int n = 0; n < bus_trab.size(); n++)
 			{
-				Trabalho current_a = bus_trab.at(n);
-				Tempo ti_a = current_a.getInicio();
-				Tempo tf_a = current_a.getFim();
+				//Turno do autocarro que se pretende adicionar (ou um dos turnos do autocarro)
+				Trabalho current_autocarro = bus_trab.at(n);
+				Tempo tinicial_autocarro = current_autocarro.getInicio();
+				Tempo tfinal_autocarro = current_autocarro.getFim();
 
 				for (unsigned int y = 0; y < driver_trab.size(); n++)
 				{
-					Trabalho current_c = driver_trab.at(y);
-					Tempo ti_c = current_c.getInicio();
-					ti_c.subtractTempo(descanso);
-					Tempo tf_c = current_c.getFim();
-					tf_c.sumTempo(descanso);
+					//Turno do condutor, com o descanso obrigatório antes e depois do turno (ou um dos turnos do condutor)
+					Trabalho current_condutor = driver_trab.at(y);
 
-					if (tf_a.getHora() < ti_c.getHora() || (tf_a.getHora() == ti_c.getHora()) && (tf_a.getMinuto() <= ti_c.getMinuto()))
+					Tempo tinicial_condutor = current_condutor.getInicio();
+					tinicial_condutor.subtractTempo(minutos_descanso);
+
+					Tempo tfinal_condutor = current_condutor.getFim();
+					tfinal_condutor.sumTempo(minutos_descanso);
+
+					if (tfinal_autocarro.getHora() < tinicial_condutor.getHora() || (tfinal_autocarro.getHora() == tinicial_condutor.getHora()) && (tfinal_autocarro.getMinuto() <= tinicial_condutor.getMinuto()))
 						goto valid;
-					else if (ti_a.getHora() > tf_c.getHora() || (ti_a.getHora() == tf_c.getHora()) && (ti_a.getMinuto() >= tf_c.getMinuto()))
+					else if (tinicial_autocarro.getHora() > tfinal_condutor.getHora() || (tinicial_autocarro.getHora() == tfinal_condutor.getHora()) && (tinicial_autocarro.getMinuto() >= tfinal_condutor.getMinuto()))
 						goto valid;
-					else
-					{
-						if (tf_c.getHora() < ti_a.getHora() || (tf_c.getHora() == ti_a.getHora()) && (tf_c.getMinuto() <= ti_a.getMinuto()))
-							goto valid;
-						else if (ti_c.getHora() > tf_a.getHora() || (ti_c.getHora() == tf_a.getHora()) && (ti_c.getMinuto() >= tf_a.getMinuto()))
-							goto valid;
-					}
 
 					cout << "Erro ao atribuir o trabalho a este condutor. Escolha outro: ";
 					goto condutor1;

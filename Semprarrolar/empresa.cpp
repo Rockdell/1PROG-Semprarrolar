@@ -2417,7 +2417,7 @@ void Empresa::beginAtribuicao()
 
 			tempos_saida.push_back(actual);
 
-			//Hora de saída
+			//Horas de saída
 			while (true)
 			{
 				actual.sumTempo(empresa.getLinhas()[it->first].getFreq());
@@ -2438,7 +2438,7 @@ void Empresa::beginAtribuicao()
 			}
 			tempo_ida_volta *= 2;
 
-			//Hora de chegada
+			//Horas de chegada
 			for (size_t a = 0; a < tempos_saida.size(); a++)
 			{
 				Tempo temp = tempos_saida.at(a);
@@ -2491,10 +2491,10 @@ void Empresa::beginAtribuicao()
 						{
 							vector<Trabalho> newTurnos;
 
-							Trabalho turno = Trabalho(i, it->first, a + 1, inicio, fim);
+							Trabalho turno = Trabalho(i, it->first, newAutocarros.rbegin()->second.getOrdem() + 1, inicio, fim);
 
 							newTurnos.push_back(turno);
-							Autocarro ac = Autocarro(it->first, 0, a + 1, newTurnos);
+							Autocarro ac = Autocarro(it->first, 0, newAutocarros.rbegin()->second.getOrdem() + 1, newTurnos);
 							newAutocarros[a + 1] = ac;
 
 							break;

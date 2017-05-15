@@ -69,7 +69,7 @@ unsigned int Condutor::getSemana() const
 }
 unsigned int Condutor::getDescanso() const
 {
-	return hsemanaCondutor;
+	return hdescansoCondutor;
 }
 vector<Trabalho> Condutor::getTrabalho() const
 {

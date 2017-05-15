@@ -12,6 +12,8 @@ const Tempo T_INICIO = Tempo(H_INICIO, M_INICIO);
 const unsigned int H_FIM = 16, M_FIM = 0;
 const Tempo T_FIM = Tempo(H_FIM, M_FIM);
 
+//Máximo
+
 //Variáveis boleanas
 bool file_open = false;
 bool fail = false;

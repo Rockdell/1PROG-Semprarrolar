@@ -435,6 +435,7 @@ endtempos:
 	empresa.setLinhas(newLinhas);
 
 	alterado_linha = true;
+	alterado = true;
 
 	return;
 
@@ -544,6 +545,7 @@ erro:
 		newLinhas[new_id] = temp;
 
 		alterado_linha = true;
+		alterado = true;
 
 		break;
 	}
@@ -577,6 +579,7 @@ erro:
 		it->second.setFreq(new_freq);
 
 		alterado_linha = true;
+		alterado = true;
 
 		break;
 	}
@@ -636,6 +639,7 @@ erro:
 		it->second.setParagens(new_paragens);
 
 		alterado_linha = true;
+		alterado = true;
 
 		break;
 	}
@@ -690,6 +694,7 @@ erro:
 		it->second.setTempos(new_tempo);
 
 		alterado_linha = true;
+		alterado = true;
 
 		break;
 	}
@@ -768,6 +773,7 @@ confirmation:
 	empresa.setLinhas(newLinhas);
 
 	alterado_linha = true;
+	alterado = true;
 
 	//Retirar os turnos desta linha (agr inexistente) aos condutores
 	mapCondutor newCondutores = empresa.getCondutores();
@@ -960,6 +966,7 @@ descanso:
 	empresa.setCondutores(newCondutores);
 
 	alterado_condutor = true;
+	alterado = true;
 
 	return;
 }
@@ -1069,6 +1076,7 @@ erro:
 		newCondutores[new_id] = temp;
 
 		alterado_condutor = true;
+		alterado = true;
 
 		break;
 	}
@@ -1128,6 +1136,7 @@ erro:
 		it->second.setNome(new_nome);
 
 		alterado_condutor = true;
+		alterado = true;
 
 		break;
 	}
@@ -1161,6 +1170,7 @@ erro:
 		it->second.setTurno(new_hturno);
 
 		alterado_condutor = true;
+		alterado = true;
 
 		break;
 	}
@@ -1194,6 +1204,7 @@ erro:
 		it->second.setSemana(new_hsemana);
 
 		alterado_condutor = true;
+		alterado = true;
 
 		break;
 	}
@@ -1227,6 +1238,7 @@ erro:
 		it->second.setDescanso(new_hdescanso);
 
 		alterado_condutor = true;
+		alterado = true;
 
 		break;
 	}
@@ -1305,6 +1317,7 @@ confirmation:
 	empresa.setCondutores(newCondutores);
 
 	alterado_condutor = true;
+	alterado = true;
 
 	return;
 }
@@ -2084,7 +2097,7 @@ void Empresa::trabalhoCondutor()
 
 	for (mapCondutor::iterator i = cCondutores.begin(); i != cCondutores.end(); i++)
 	{
-		cout << i->second.getID() << endl;
+		cout << " " << i->second.getID() << endl;
 	}
 
 	cout << "\n Pretende visualizar o trabalho de qual condutor? ";
@@ -2117,7 +2130,7 @@ id:
 	mapCondutor newCondutores = empresa.getCondutores();
 	Condutor c = newCondutores[c_id];
 
-	cout << "\n Trabalho atribuído a " << c.getNome() << ": \n";
+	cout << "\n Trabalho atribuído a " << c.getNome() << ": \n\n";
 
 	c.showTrabalho();
 
@@ -2175,17 +2188,20 @@ fim:
 }
 void Empresa::infoAutocarro()
 {
-	string input_dia;
+	string input_dia = "";
 	string input_linha;
 	string input_auto;
 	unsigned int dia_semana;
 	unsigned int linha_id;
 	unsigned int auto_id;
 
-	cout << " Qual é o dia do autocarro? [Segunda-feira = 1, Terça-feira = 2, ... , Domingo = 7] ";
+	cout << " Que dia da semana pretende selecionar?\n";
+	cout << " [1] Segunda-feira\n [2] Terça-feira\n [3] Quarta-feira\n [4] Quinta-feira\n [5] Sexta-feira\n [6] Sábado\n [7] Domingo\n [0] Cancelar\n\n";
 
 input_d:
-	getline(cin, input_dia);
+	char input = _getch();
+
+	input_dia += input;
 
 	switch (inputErrorHandling(input_dia, 'n'))
 	{
@@ -2315,27 +2331,59 @@ input_a:
 }
 void Empresa::trabalhoAutocarroLeft()
 {
-	cout << " Autocarros sem condutor atribuído: \n\n";
+	string input_dia = "";
+	unsigned int dia_semana;
 
-	for (size_t i = 0; i < vectorTrabalho.size(); i++)
+	cout << " Que dia da semana pretende selecionar?\n";
+	cout << " [1] Segunda-feira\n [2] Terça-feira\n [3] Quarta-feira\n [4] Quinta-feira\n [5] Sexta-feira\n [6] Sábado\n [7] Domingo\n [0] Cancelar\n\n";
+
+input_d:
+	char input = _getch();
+
+	input_dia += input;
+
+	switch (inputErrorHandling(input_dia, 'n'))
 	{
-		cout << " " << intDay(i) << ": " << endl << endl;
+	case 0:
+		cerr << " Input inválido. Introduza novamente:";
+		goto input_d;
+	case 1:
+		break;
+	case 2:
+		cerr << "\n Operação cancelada.\n";
+		_getch();
+		return;
+	}
 
-		for (linhasDia::iterator it = vectorTrabalho.at(i).begin(); it != vectorTrabalho.at(i).end(); it++)
+	istringstream stream_dia(input_dia);
+	stream_dia >> dia_semana;
+
+	if (dia_semana <= 0 || dia_semana >= 8)
+	{
+		cerr << " Input inválido. Introduza novamente: ";
+		goto input_d;
+	}
+
+	dia_semana--;
+
+	cout << " " << intDay(dia_semana) << " - Condutores não atribuídos: \n\n";
+
+	linhasDia temp = empresa.getTrabalho().at(dia_semana);
+
+	for (linhasDia::iterator it = temp.begin(); it != temp.end(); it++)
+	{
+		cout << " " << it->first << ": " << endl;
+
+		for (mapAutocarro::iterator a = it->second.begin(); a != it->second.end(); a++)
 		{
-			cout << " " << it->first << ": " << endl;
-
-			for (mapAutocarro::iterator a = it->second.begin(); a != it->second.end(); a++)
+			if (a->second.getCondutorID() == 0)
 			{
-				if (a->second.getCondutorID() == 0)
-				{
-					cout << " Autocarro nº " << a->second.getOrdem() << endl;
-				}
+				cout << " Autocarro nº " << a->second.getOrdem() << endl;
 			}
-			cout << endl;
 		}
 		cout << endl;
 	}
+
 
 	_getch();
 

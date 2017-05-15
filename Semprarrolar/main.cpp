@@ -9,7 +9,7 @@ using namespace std;
 //Horário de um dia de trabalho
 const unsigned int H_INICIO = 8, M_INICIO = 0;
 const Tempo T_INICIO = Tempo(H_INICIO, M_INICIO);
-const unsigned int H_FIM = 12, M_FIM = 0;
+const unsigned int H_FIM = 16, M_FIM = 0;
 const Tempo T_FIM = Tempo(H_FIM, M_FIM);
 
 //Variáveis boleanas
@@ -18,7 +18,7 @@ bool fail = false;
 
 bool alterado_condutor = false;
 bool alterado_linha = false;
-bool alterado;
+bool alterado = true;
 
 //Nova empresa
 Empresa empresa;

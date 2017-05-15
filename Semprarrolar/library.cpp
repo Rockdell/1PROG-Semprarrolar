@@ -31,9 +31,14 @@ redo:
 	if (file_open)
 	{
 		//Sempre que inicia o menu principal, actualiza o vectorTrabalho
-		empresa.beginAtribuicao();
 
-		cout << " [1] Linhas\n [2] Condutores\n [3] Informação\n [4] Atribuição de trabalho\n [0] Cancelar\n\n";
+		if (alterado)
+		{
+			empresa.beginAtribuicao();
+			alterado = false;
+		}
+
+		cout << " [1] Linhas\n [2] Condutores\n [3] Informação\n [4] Atribuição de trabalho\n [0] Exit\n\n";
 
 	erro1:
 		char input = _getch();
@@ -162,7 +167,7 @@ redo:
 	cout << " === MENU LINHAS ===\n";
 	cout << " ===================\n\n";
 
-	cout << " [1] Adicionar linha\n [2] Alterar linha\n [3] Remover linha\n [0] Cancelar\n\n";
+	cout << " [1] Adicionar linha\n [2] Alterar linha\n [3] Remover linha\n [0] Exit\n\n";
 
 erro:
 	char input = _getch();
@@ -196,7 +201,7 @@ redo:
 	cout << " === MENU CONDUTORES ===\n";
 	cout << " =======================\n\n";
 
-	cout << " [1] Adicionar condutor\n [2] Alterar condutor\n [3] Remover condutor\n [4] Ver trabalho do condutor\n [5] Ver horas semanais restantes\n [0] Cancelar\n\n";
+	cout << " [1] Adicionar condutor\n [2] Alterar condutor\n [3] Remover condutor\n [4] Ver trabalho do condutor\n [5] Ver horas semanais restantes\n [0] Exit\n\n";
 
 erro:
 	char input = _getch();
@@ -237,7 +242,7 @@ redo:
 	cout << " =======================\n\n";
 
 	cout << " [1] Percurso entre duas paragens\n [2] Horário da linha\n [3] Horário da paragem\n [4] Inquirir linhas sobre paragem\n " <<
-		"[5] Informação da linha\n [6] Informação do autocarro\n [7] Autocarros sem condutor\n\n";
+		"[5] Informação da linha\n [6] Informação do autocarro\n [7] Autocarros sem condutor\n [0] Exit\n\n";
 
 erro:
 	char input = _getch();
@@ -290,7 +295,7 @@ redo:
 	if (!day_open)
 	{
 		cout << " Que dia da semana pretende selecionar?\n";
-		cout << " [1] Segunda-feira\n [2] Terça-feira\n [3] Quarta-feira\n [4] Quinta-feira\n [5] Sexta-feira\n [6] Sábado\n [7] Domingo\n\n";
+		cout << " [1] Segunda-feira\n [2] Terça-feira\n [3] Quarta-feira\n [4] Quinta-feira\n [5] Sexta-feira\n [6] Sábado\n [7] Domingo\n [0] Exit\n\n";
 
 	erro1:
 		char input = _getch();
@@ -345,7 +350,7 @@ redo:
 		unsigned int c_id;
 
 		//Dia da semana
-		cout << "\n " << dia_da_semana << endl << endl;
+		cout << " " << dia_da_semana << endl << endl;
 
 		//Map da com as linhas e os autocarros de cada linha
 		linhasDia linhas_com_autocarros = empresa.getTrabalho().at(index);
@@ -412,7 +417,7 @@ redo:
 				cout << " Condutor atribuído: " << empresa.getCondutores()[ac.getCondutorID()].getNome() << endl << endl;
 		}
 
-		cout << " [1] Atribuir condutor\n [2] Desatribuir condutor\n\n";
+		cout << " [1] Atribuir condutor\n [2] Desatribuir condutor\n [0] Cancelar\n\n";
 
 	input:
 		char input = _getch();
@@ -487,17 +492,89 @@ redo:
 				goto condutor1;
 			}
 			
-			//Confirmação aqui:
+			//Variaveis mais acessiveis
+			int turno = empresa.getCondutores()[c_id].getTurno();
+			int semana = empresa.getCondutores()[c_id].getSemana();
+			int descanso = empresa.getCondutores()[c_id].getDescanso();
+			vector<Trabalho> trabalhos = empresa.getCondutores()[c_id].getTrabalho();
+			vector<Trabalho> driver_trab;
 
-			//Adicionar aqui o algoritmo que deixa (ou não) atribuir o autocarro ao condutor
-			//ATENÇAO -  os autocarros tem vários turnos. É preciso contar os minutos totais do autocarro e depois ver se o condutor pode aceita-lo
+			Autocarro bus = empresa.getTrabalho().at(index)[l_id][auto_id];
+			vector<Trabalho> bus_trab = bus.getTrabalho();
 
-			//Confirmações a fazer (pelo menos)
-			//1 - Daily_Max_Time >= New_Shift_Time + other_same_day_shit_times;
-			//2 - Max_week_time >= new_shift_time + other_shifts_times;
-			//3 - Driver can't have any shifts in the same day that conflict;
-			//4 - Rest Time between shifts must be respected;
-			
+			//Trabalhos existentes no dia que selecionou (condutor)
+			for (unsigned int n = 0; n < trabalhos.size(); n++)
+			{
+				int dia = trabalhos.at(n).getDiaSemana();
+
+				if (dia == index)
+					driver_trab.push_back(trabalhos.at(n));
+			}
+
+			//Total de horas/minutos atribuidas ao condutor e ao autocarro
+			unsigned int minutos_semana = semana * 60;
+			unsigned int minutos_turno = turno * 60;
+			unsigned int total_c = 0;
+			unsigned int total_a = 0;
+
+			//Tempo que o condutor trabalha durante a semana toda (tempo semanal atual do condutor)
+			for (unsigned int n = 0; n < trabalhos.size(); n++)
+			{
+				Tempo inicio = trabalhos.at(n).getInicio();
+				Tempo fim = trabalhos.at(n).getFim();
+
+				total_c += fim.subtractTempo(inicio);
+			}
+
+			//Tempo dos turnos do autocarro
+			for (unsigned int n = 0; n < bus_trab.size(); n++)
+			{
+				Tempo inicio = bus_trab.at(n).getInicio();
+				Tempo fim = bus_trab.at(n).getFim();
+
+				total_a += fim.subtractTempo(inicio);
+			}
+
+			//Verifica se ultrapassa as horas semanais e se o turno do autocarro é maior que o turno do condutor 
+			if (total_c + total_a > minutos_semana /*|| total_a > minutos_turno*/)
+			{
+				cout << " Erro ao atribuir o trabalho a este condutor. Escolha outro: " << endl;
+				goto condutor1;
+			}
+
+			//Verifica se existe conflito de turnos (horas)
+			for (unsigned int n = 0; n < bus_trab.size(); n++)
+			{
+				Trabalho current_a = bus_trab.at(n);
+				Tempo ti_a = current_a.getInicio();
+				Tempo tf_a = current_a.getFim();
+
+				for (unsigned int y = 0; y < driver_trab.size(); n++)
+				{
+					Trabalho current_c = driver_trab.at(y);
+					Tempo ti_c = current_c.getInicio();
+					ti_c.subtractTempo(descanso);
+					Tempo tf_c = current_c.getFim();
+					tf_c.sumTempo(descanso);
+
+					if (tf_a.getHora() < ti_c.getHora() || (tf_a.getHora() == ti_c.getHora()) && (tf_a.getMinuto() <= ti_c.getMinuto()))
+						goto valid;
+					else if (ti_a.getHora() > tf_c.getHora() || (ti_a.getHora() == tf_c.getHora()) && (ti_a.getMinuto() >= tf_c.getMinuto()))
+						goto valid;
+					else
+					{
+						if (tf_c.getHora() < ti_a.getHora() || (tf_c.getHora() == ti_a.getHora()) && (tf_c.getMinuto() <= ti_a.getMinuto()))
+							goto valid;
+						else if (ti_c.getHora() > tf_a.getHora() || (ti_c.getHora() == tf_a.getHora()) && (ti_c.getMinuto() >= tf_a.getMinuto()))
+							goto valid;
+					}
+
+					cout << "Erro ao atribuir o trabalho a este condutor. Escolha outro: ";
+					goto condutor1;
+				}
+			}
+
+		valid:			
 			//Adicionar o condutor
 			empresa.atribuirCondutor(c_id, index, l_id, auto_id);
 
@@ -710,14 +787,3 @@ string intDay(unsigned int day)
 		return "null";
 	}
 }
-
-//void sortTrabalho(vector<Trabalho> &trab)
-//{
-//	vector<Trabalho> newVector;
-//
-//	for (size_t i = 0; true; i++)
-//	{
-//		if (trab.at(i).getInicio() < trab.at(i + 1).getInicio())
-//			continue;
-//	}
-//}

@@ -65,3 +65,13 @@ unsigned int Tempo::subtractTempo(Tempo t)
 
 	return (horas * 60) + minutos;
 }
+void Tempo::subtractTempo(unsigned int m)
+{
+	this->setMinuto(this->getMinuto() - m);
+
+	while (this->getMinuto() < 0)
+	{
+		this->setHora(this->getHora() - 1);
+		this->setMinuto(this->getMinuto() + 60);
+	}
+}

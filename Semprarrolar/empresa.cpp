@@ -1576,13 +1576,23 @@ void Empresa::percursoParagem()
 {
 	//Paragem inicial e final
 	string start, finish;
-
+	
+	//Encontrou a paragem inicial/final (para a mesma linha)
 	bool found_start = false, found_finish = false;
+
+	//Índices da paragem inicial e final (nas suas linhas, quer seja a mesma ou diferentes)
 	unsigned index_start, index_finish;
+
+	//Vector onde vai ser guardado um vetor com: idLinha, index_start e index_finish
 	vector< vector<unsigned int> > sameLine;
 
+	//Vector onde vai ser guardado um vetor com: idLinha inicial, index_start, índice da paragem comum na linha inicial, idLinha final, index_finish, índice da paragem comum na linha final
 	vector< vector<unsigned int>> differentLine;
+
+	//Vector com as linhas que incluem a paragem inicial
 	vector<unsigned int> linhas_start;
+
+	//Vector com as linhas que incluem a paragem final
 	vector<unsigned int> linhas_finish;
 
 	cout << " Qual a paragem inicial? ";
@@ -1640,13 +1650,17 @@ paragem_final:
 	///As duas paragens estão na mesma paragem?
 	for (mapLinha::iterator it = lLinhas.begin(); it != lLinhas.end(); it++)
 	{
+		//Para todas as paragens da linha
 		for (size_t i = 0; i < it->second.getParagens().size(); i++)
 		{
+			//Comparar com a paragem inicial
 			if (compararCaseInsensitive(it->second.getParagens().at(i), start))
 			{
 				found_start = true;
 				index_start = i;
 			}
+
+			//Comparar com a paragem final
 			else if (compararCaseInsensitive(it->second.getParagens().at(i), finish))
 			{
 				found_finish = true;
@@ -1654,6 +1668,7 @@ paragem_final:
 			}
 		}
 
+		//Encontrou ambas as paragens na linha?
 		if (found_start && found_finish)
 			sameLine.push_back({ it->first, index_start, index_finish });
 
@@ -1725,6 +1740,7 @@ paragem_final:
 		}
 	}
 
+	//É possível fazer um percurso entre as duas paragens?
 	if (sameLine.size() == 0 && differentLine.size() == 0)
 	{
 		cerr << " Não é possível projectar um percurso para essas paragens. Paragem inicial? ";
@@ -1732,16 +1748,16 @@ paragem_final:
 		goto paragem_inicial;
 	}
 
-	//Processamento
+	///Processamento
 	typedef map <unsigned int, string> mapPercurso;
 
-	//Automaticamente faz sort com base no tempo total
+	//Usamos um map, pois faz, automaticamente, o sort com base no tempo total
 	mapPercurso opcoes;
 
 	//Mesma linha
 	for (size_t i = 0; i < sameLine.size(); i++)
 	{
-		//Variaveis
+		//Variáveis
 		unsigned int idlinha = sameLine.at(i).at(0);
 		unsigned int i1 = sameLine.at(i).at(1);
 		unsigned int i2 = sameLine.at(i).at(2);
@@ -1749,6 +1765,7 @@ paragem_final:
 		unsigned int sumTempos = 0;
 		string percurso = "";
 
+		//Posição do i1 e i2 (pode ser necessário inverter o vector com paragems e tempos)
 		if (i2 > i1)
 		{
 			for (size_t z = i1; z < i2; z++)
@@ -1774,6 +1791,7 @@ paragem_final:
 		}
 		else
 		{
+			//Inversão do vector das paragens e dos tempos
 			vector<string> inversoParagens = lLinhas[idlinha].getParagens();
 			reverse(inversoParagens.begin(), inversoParagens.end());
 			vector<unsigned int> inversoTempos = lLinhas[idlinha].getTempos();
@@ -1818,7 +1836,7 @@ paragem_final:
 		unsigned int sumTempos = 0;
 		string percurso = "";
 
-		//Viagem na linha start
+		//Viagem na linha start (com atenção à posição do i1 e i_s)
 		if (i_s > i1)
 		{
 			for (size_t z = i1; z < i_s; z++)
@@ -1838,7 +1856,7 @@ paragem_final:
 				}
 			}
 
-			//Viagem na linha finish
+			//Viagem na linha finish (com atenção à posição do i2 e i_f)
 			if (i_f > i2)
 			{
 				vector<string> inversoParagens = lLinhas[idLinha_finish].getParagens();
@@ -1857,6 +1875,7 @@ paragem_final:
 						percurso += inversoParagens.at(z);
 						percurso += " -> " + inversoParagens.at(z + 1);
 
+						//Linha a fazer cout
 						string output = "\n Linha: " + to_string(idLinha_start) + " e " + to_string(idLinha_finish) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
 
 						opcoes[sumTempos] = output;
@@ -1880,6 +1899,7 @@ paragem_final:
 						percurso += lLinhas[idLinha_finish].getParagens().at(z);
 						percurso += " -> " + lLinhas[idLinha_finish].getParagens().at(z + 1);
 
+						//Linha a fazer cout
 						string output = "\n Linha: " + to_string(idLinha_start) + " e " + to_string(idLinha_finish) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
 
 						opcoes[sumTempos] = output;
@@ -1896,6 +1916,7 @@ paragem_final:
 		}
 		else
 		{
+			//Inversão do vector das paragens e dos tempos
 			vector<string> inversoParagens = lLinhas[idLinha_start].getParagens();
 			reverse(inversoParagens.begin(), inversoParagens.end());
 			vector<unsigned int> inversoTempos = lLinhas[idLinha_start].getTempos();
@@ -1920,7 +1941,7 @@ paragem_final:
 				}
 			}
 
-			//Viagem na linha finish
+			//Viagem na linha finish (com atenção à posição do i2 e i_f)
 			if (i_f > i2)
 			{
 				vector<string> inversoParagens = lLinhas[idLinha_finish].getParagens();
@@ -1939,6 +1960,7 @@ paragem_final:
 						percurso += inversoParagens.at(z);
 						percurso += " -> " + inversoParagens.at(z + 1);
 
+						//Linha a fazer cout
 						string output = "\n Linha: " + to_string(idLinha_start) + " e " + to_string(idLinha_finish) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
 
 						opcoes[sumTempos] = output;
@@ -1963,6 +1985,7 @@ paragem_final:
 						percurso += lLinhas[idLinha_finish].getParagens().at(z);
 						percurso += " -> " + lLinhas[idLinha_finish].getParagens().at(z + 1);
 
+						//Linha a fazer cout
 						string output = "\n Linha: " + to_string(idLinha_start) + " e " + to_string(idLinha_finish) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
 
 						opcoes[sumTempos] = output;
@@ -1976,11 +1999,10 @@ paragem_final:
 					}
 				}
 			}
-
 		}
 	}
 
-	//Output
+	//Output de todas as possibilidades do percurso entre as duas paragens
 	for (mapPercurso::iterator it = opcoes.begin(); it != opcoes.end(); it++)
 	{
 		cout << it->second;
@@ -2392,27 +2414,34 @@ input_d:
 
 void Empresa::beginAtribuicao()
 {
+	//Map com todas as linhas existentes no momento de execução
 	mapLinha linhas_existentes = empresa.getLinhas();
 
+	//Vector com o trabalho de todos os dias
 	vector<linhasDia> newVector;
 
 	//Para cada dia da semana
 	for (size_t i = 0; i < 7; i++)
 	{
+		//Novo map com as linhas de um dia
 		linhasDia newTrabalho;
 
 		//Para cada linha do dia
 		for (mapLinha::iterator it = linhas_existentes.begin(); it != linhas_existentes.end(); it++)
 		{
+			//Novo map com os autocarros de uma linha
 			mapAutocarro newAutocarros;
 
-			//Hora de inicio
+			//Hora de início
 			Tempo actual = T_INICIO;
 			bool acabarPreencher = false;
 
-			unsigned int nr_autocarros = 0;
 			unsigned int tempo_ida_volta = 0;
+
+			//Vector com os tempos de saída da paragem inicial da linha
 			vector<Tempo> tempos_saida;
+
+			//Vector com os tempos de chegada à paragem inicial da linha
 			vector<Tempo> tempos_chegada;
 
 			tempos_saida.push_back(actual);
@@ -2420,15 +2449,14 @@ void Empresa::beginAtribuicao()
 			//Horas de saída
 			while (true)
 			{
+				//Somar a frequência
 				actual.sumTempo(empresa.getLinhas()[it->first].getFreq());
 
+				//Condição para terminar
 				if (actual.getHora() > T_FIM.getHora() || (actual.getHora() == T_FIM.getHora() && actual.getMinuto() > T_FIM.getMinuto()))
 					break;
 				else
-				{
 					tempos_saida.push_back(actual);
-					nr_autocarros++;
-				}
 			}
 
 			//Tempo que o autocarro demora a ir e vir
@@ -2443,6 +2471,7 @@ void Empresa::beginAtribuicao()
 			{
 				Tempo temp = tempos_saida.at(a);
 
+				//Somar o tempo de ida e volta ao tempo de saída
 				temp.sumTempo(tempo_ida_volta);
 
 				tempos_chegada.push_back(temp);
@@ -2453,32 +2482,39 @@ void Empresa::beginAtribuicao()
 			{
 				//Inicio e fim do turno
 				Tempo inicio = tempos_saida.at(a);
-				Tempo fim = inicio;
-				fim.sumTempo(tempo_ida_volta);
+				Tempo fim = tempos_chegada.at(a);
 				
-				//Primeiro autocarro a ser criado
+				//Se ainda não houver autocarros, adiciona o primeiro autocarro da linha
 				if (newAutocarros.size() == 0)
 				{
-					Trabalho turno = Trabalho(i, it->first, 0, inicio, fim);
+					//Novo turno do autocarro
+					Trabalho turno = Trabalho(i, it->first, 1, inicio, fim);
 
+					//Vector com os turnos do autocarro
 					vector<Trabalho> newTurnos;
 
 					newTurnos.push_back(turno);
-					Autocarro ac = Autocarro(it->first, 0, a + 1, newTurnos);
-					newAutocarros[a + 1] = ac;
+
+					//Novo autocarro
+					Autocarro ac = Autocarro(it->first, 0, 1, newTurnos);
+
+					//Adicionar o autocarro a map de autocarros
+					newAutocarros[1] = ac;
 				}
 				else
 				{
-					//Verificar se algum autocarro já existente, está disponível para este turno
+					//Verificar se algum autocarro, já existente, está disponível para este turno
 					for (mapAutocarro::iterator ot = newAutocarros.begin(); ot != newAutocarros.end(); ot++)
 					{
-						//O último turno do autocarro acaba antes deste?
+						//O último turno do autocarro acaba antes deste novo turno?
 						if (ot->second.getTrabalho().back().getFim().getHora() < inicio.getHora() || (ot->second.getTrabalho().back().getFim().getHora() == inicio.getHora()) && (ot->second.getTrabalho().back().getFim().getMinuto() <= inicio.getMinuto()))
 						{
 							vector<Trabalho> trabalhoAutocarro = ot->second.getTrabalho();
 
+							//Novo turno do autocarro
 							Trabalho turno = Trabalho(i, it->first, ot->second.getOrdem(), inicio, fim);
 
+							//Adiciona ao vector de turnos já existente do autocarro
 							trabalhoAutocarro.push_back(turno);
 
 							ot->second.setTrabalho(trabalhoAutocarro);
@@ -2486,16 +2522,22 @@ void Empresa::beginAtribuicao()
 							break;
 						}
 
-						//Caso nenhum autocarro esteja disponível, é criado um novo
+						//Caso nenhum autocarro esteja disponível, é criado um novo autocarro
 						if (ot->first == newAutocarros.rbegin()->first)
 						{
-							vector<Trabalho> newTurnos;
-
+							//Novo turno do autocarro
 							Trabalho turno = Trabalho(i, it->first, newAutocarros.rbegin()->second.getOrdem() + 1, inicio, fim);
 
+							//Vector com os turnos do autocarro
+							vector<Trabalho> newTurnos;
+
 							newTurnos.push_back(turno);
+
+							//Novo autocarro
 							Autocarro ac = Autocarro(it->first, 0, newAutocarros.rbegin()->second.getOrdem() + 1, newTurnos);
-							newAutocarros[a + 1] = ac;
+
+							//Adicionar o autocarro ao map de autocarros
+							newAutocarros[newAutocarros.rbegin()->second.getOrdem() + 1] = ac;
 
 							break;
 						}
@@ -2503,32 +2545,37 @@ void Empresa::beginAtribuicao()
 				}
 			}
 
+			//Adicionar o map de autocarros ao map de trabalho do dia
 			newTrabalho[it->first] = newAutocarros;
 		}
 
+		//Adicionar o map de trabalho do dia ao vector com os trabalhos de todos os dias
 		newVector.push_back(newTrabalho);
 	}
 
 	empresa.setTrabalho(newVector);
 
-	//A estrutura básica está criada. Agora falta adicionar os condutores já atribuidos
+	///A estrutura básica está criada. Agora falta adicionar os condutores já atribuidos
 
+	//Map com os condutores existentes no momento de execução
 	mapCondutor condutoresActual = empresa.getCondutores();
 
+	//Para cada condutor
 	for (mapCondutor::iterator it = condutoresActual.begin(); it != condutoresActual.end(); it++)
 	{
+		//Trabalho do condutor
 		vector<Trabalho> trabalhoCondutor = it->second.getTrabalho();
 
+		//Para cada trabalho do condutor
 		for (size_t i = 0; i < trabalhoCondutor.size(); i++)
 		{
 			Trabalho trabalhoActual = trabalhoCondutor.at(i);
 
-			//Caso o condutor tenho dois trabalhos no mesmo autocarro (pois o autocarro pode ter turnos diferentes), avança
+			//Caso o condutor tenha dois trabalhos no mesmo autocarro (pois o autocarro pode ter vários turnos) e já o tenha adicionado, faz skip
 			if (newVector.at(trabalhoActual.getDiaSemana())[trabalhoActual.getLinhaID()][trabalhoActual.getAutocarroID()].getCondutorID() != 0)
 				continue;
 			else
 				newVector.at(trabalhoActual.getDiaSemana())[trabalhoActual.getLinhaID()][trabalhoActual.getAutocarroID()].setCondutorID(it->first);
-
 		}
 	}
 

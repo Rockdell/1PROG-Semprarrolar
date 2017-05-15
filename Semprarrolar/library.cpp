@@ -721,5 +721,3 @@ string intDay(unsigned int day)
 //			continue;
 //	}
 //}
-
-

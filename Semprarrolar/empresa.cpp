@@ -1566,7 +1566,11 @@ void Empresa::percursoParagem()
 
 	bool found_start = false, found_finish = false;
 	unsigned index_start, index_finish;
-	vector< vector<unsigned int> > linhasStartFinish;
+	vector< vector<unsigned int> > sameLine;
+
+	vector< vector<unsigned int>> differentLine;
+	vector<unsigned int> linhas_start;
+	vector<unsigned int> linhas_finish;
 
 	cout << " Qual a paragem inicial? ";
 
@@ -1620,47 +1624,118 @@ paragem_final:
 
 	mapLinha lLinhas = empresa.getLinhas();
 
-	//As duas paragens estão na mesma paragem?
-	for (mapLinha::iterator i = lLinhas.begin(); i != lLinhas.end(); i++)
+	///As duas paragens estão na mesma paragem?
+	for (mapLinha::iterator it = lLinhas.begin(); it != lLinhas.end(); it++)
 	{
-		for (size_t y = 0; y < i->second.getParagens().size(); y++)
+		for (size_t i = 0; i < it->second.getParagens().size(); i++)
 		{
-			if (compararCaseInsensitive(i->second.getParagens().at(y), start))
+			if (compararCaseInsensitive(it->second.getParagens().at(i), start))
 			{
 				found_start = true;
-				index_start = y;
+				index_start = i;
 			}
-			else if (compararCaseInsensitive(i->second.getParagens().at(y), finish))
+			else if (compararCaseInsensitive(it->second.getParagens().at(i), finish))
 			{
 				found_finish = true;
-				index_finish = y;
+				index_finish = i;
 			}
 		}
 
 		if (found_start && found_finish)
-			linhasStartFinish.push_back({ i->first, index_start, index_finish });
+			sameLine.push_back({ it->first, index_start, index_finish });
 
 		found_start = false;
 		found_finish = false;
 	}
 
-	if (linhasStartFinish.size() == 0)
+	//Preencher linhas_start e linhas_finish
+	for (mapLinha::iterator it = lLinhas.begin(); it != lLinhas.end(); it++)
 	{
-		cerr << " Não existe nenhuma linha com essas paragens. Paragem inicial? ";
+		//Para start
+		for (size_t i = 0; i < it->second.getParagens().size(); i++)
+		{
+			if (compararCaseInsensitive(it->second.getParagens().at(i), start))
+			{
+				linhas_start.push_back(it->first);
+				break;
+			}
+		}
+
+		//Para finish
+		for (size_t i = 0; i < it->second.getParagens().size(); i++)
+		{
+			if (compararCaseInsensitive(it->second.getParagens().at(i), finish))
+			{
+				linhas_finish.push_back(it->first);
+				break;
+			}
+		}
+	}
+
+	///As duas paragens estão a 1 linha de distância?
+	for (size_t i = 0; i < linhas_start.size(); i++)
+	{
+		Linha l_s = lLinhas[linhas_start.at(i)];
+
+		//Index da paragem inicial na linha inicial
+		for (size_t y = 0; y < l_s.getParagens().size(); y++)
+		{
+			if (compararCaseInsensitive(l_s.getParagens().at(y), start))
+				index_start = y;
+		}
+
+		for (size_t y = 0; y < linhas_finish.size(); y++)
+		{
+			Linha l_f = lLinhas[linhas_finish.at(y)];
+
+			//Index da paragem final na linha final
+			for (size_t c = 0; c < l_f.getParagens().size(); c++)
+			{
+				if (compararCaseInsensitive(l_f.getParagens().at(c), finish))
+					index_finish = c;
+			}
+
+			//Caso sejam a mesma linha
+			if (l_s.getID() == l_f.getID())
+				continue;
+
+			for (size_t a = 0; a < l_s.getParagens().size(); a++)
+			{
+				for (size_t b = 0; b < l_f.getParagens().size(); b++)
+				{
+					if (compararCaseInsensitive(l_s.getParagens().at(a), l_f.getParagens().at(b)))
+					{
+						differentLine.push_back({ linhas_start.at(i), index_start, a, linhas_finish.at(y), index_finish, b });
+					}
+				}
+			}
+		}
+	}
+
+	if (sameLine.size() == 0 && differentLine.size() == 0)
+	{
+		cerr << " Não é possível projectar um percurso para essas paragens. Paragem inicial? ";
 		_getch();
 		goto paragem_inicial;
 	}
 
-	//Output
+	//Processamento
+	typedef map <unsigned int, string> mapPercurso;
+
+	//Automaticamente faz sort com base no tempo total
+	mapPercurso opcoes;
+
 	unsigned int nrOpcao = 1;
 
-	for (size_t i = 0; i < linhasStartFinish.size(); i++)
+	//Mesma linha
+	for (size_t i = 0; i < sameLine.size(); i++)
 	{
 		//Variaveis
-		unsigned int idlinha = linhasStartFinish.at(i).at(0);
-		unsigned int i1 = linhasStartFinish.at(i).at(1);
-		unsigned int i2 = linhasStartFinish.at(i).at(2);
-		unsigned int sumtempos = 0;
+		unsigned int idlinha = sameLine.at(i).at(0);
+		unsigned int i1 = sameLine.at(i).at(1);
+		unsigned int i2 = sameLine.at(i).at(2);
+
+		unsigned int sumTempos = 0;
 		string percurso = "";
 
 		if (i2 > i1)
@@ -1670,20 +1745,25 @@ paragem_final:
 				//Último elemento
 				if (z == i2 - 1)
 				{
-					sumtempos += lLinhas[idlinha].getTempos().at(z);
+					sumTempos += lLinhas[idlinha].getTempos().at(z);
 					percurso += lLinhas[idlinha].getParagens().at(z);
 					percurso += " -> " + lLinhas[idlinha].getParagens().at(z + 1);
 
-					cout << "\n Opção nº " << nrOpcao << endl;
-					cout << " Linha: " << idlinha << endl;
-					cout << " Percurso: " << percurso << endl;
-					cout << " Tempo total: " << sumtempos << endl;
+					string output = "\n Opção nº " + nrOpcao;
+					output += "\n Linha: " + to_string(idlinha) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
+
+					opcoes[sumTempos] = output;
+
+					//cout << "\n Opção nº " << nrOpcao << endl;
+					//cout << " Linha: " << idlinha << endl;
+					//cout << " Percurso: " << percurso << endl;
+					//cout << " Tempo total: " << sumtempos << endl;
 
 					nrOpcao++;
 				}
 				else
 				{
-					sumtempos += lLinhas[idlinha].getTempos().at(z);
+					sumTempos += lLinhas[idlinha].getTempos().at(z);
 					percurso += lLinhas[idlinha].getParagens().at(z);
 					percurso += " -> ";
 				}
@@ -1703,25 +1783,221 @@ paragem_final:
 			{
 				if (z == i2 - 1)
 				{
-					sumtempos += inversoTempos.at(z);
+					sumTempos += inversoTempos.at(z);
 					percurso += inversoParagens.at(z);
 					percurso += " -> " + inversoParagens.at(z + 1);
 
-					cout << "\n Opção nº " << nrOpcao << endl;
-					cout << " Linha: " << idlinha << endl;
-					cout << " Percurso: " << percurso << endl;
-					cout << " Tempo total: " << sumtempos << endl;
+					string output = "\n Opção nº " + nrOpcao;
+					output += "\n Linha: " + to_string(idlinha) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
+
+					opcoes[sumTempos] = output;
+
+					//cout << "\n Opção nº " << nrOpcao << endl;
+					//cout << " Linha: " << idlinha << endl;
+					//cout << " Percurso: " << percurso << endl;
+					//cout << " Tempo total: " << sumtempos << endl;
 
 					nrOpcao++;
 				}
 				else
 				{
-					sumtempos += inversoTempos.at(z);
+					sumTempos += inversoTempos.at(z);
 					percurso += inversoParagens.at(z);
 					percurso += " -> ";
 				}
 			}
 		}
+	}
+
+	//Linhas diferentes
+	for (size_t i = 0; i < differentLine.size(); i++)
+	{
+		//Variáveis
+		unsigned int idLinha_start = differentLine.at(i).at(0);
+		unsigned int i1 = differentLine.at(i).at(1);
+		unsigned int i_s = differentLine.at(i).at(2);
+		unsigned int idLinha_finish = differentLine.at(i).at(3);
+		unsigned int i2 = differentLine.at(i).at(4);
+		unsigned int i_f = differentLine.at(i).at(5);
+
+		unsigned int sumTempos = 0;
+		string percurso = "";
+
+		//Viagem na linha start
+		if (i_s > i1)
+		{
+			for (size_t z = i1; z < i_s; z++)
+			{
+				//Último elemento
+				if (z == i_s - 1)
+				{
+					sumTempos += lLinhas[idLinha_start].getTempos().at(z);
+					percurso += lLinhas[idLinha_start].getParagens().at(z);
+					percurso += " -> ";
+				}
+				else
+				{
+					sumTempos += lLinhas[idLinha_start].getTempos().at(z);
+					percurso += lLinhas[idLinha_start].getParagens().at(z);
+					percurso += " -> ";
+				}
+			}
+
+			//Viagem na linha finish
+			if (i_f > i2)
+			{
+				vector<string> inversoParagens = lLinhas[idLinha_finish].getParagens();
+				reverse(inversoParagens.begin(), inversoParagens.end());
+				vector<unsigned int> inversoTempos = lLinhas[idLinha_finish].getTempos();
+				reverse(inversoTempos.begin(), inversoTempos.end());
+
+				i2 = (inversoParagens.size() - 1) - i2;
+				i_f = (inversoParagens.size() - 1) - i_f;
+
+				for (size_t z = i_f; z < i2; z++)
+				{
+					if (z == i2 - 1)
+					{
+						sumTempos += inversoTempos.at(z);
+						percurso += inversoParagens.at(z);
+						percurso += " -> " + inversoParagens.at(z + 1);
+
+						string output = "\n Opção nº " + to_string(nrOpcao);
+						output += "\n Linha: " + to_string(idLinha_start) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
+
+						opcoes[sumTempos] = output;
+
+						nrOpcao++;
+					}
+					else
+					{
+						sumTempos += inversoTempos.at(z);
+						percurso += inversoParagens.at(z);
+						percurso += " -> ";
+					}
+				}
+			}
+			else
+			{
+				for (size_t z = i_f; z < i2; z++)
+				{
+					//Último elemento
+					if (z == i2 - 1)
+					{
+						sumTempos += lLinhas[idLinha_finish].getTempos().at(z);
+						percurso += lLinhas[idLinha_finish].getParagens().at(z);
+						percurso += " -> " + lLinhas[idLinha_finish].getParagens().at(z + 1);
+
+						string output = "\n Opção nº " + to_string(nrOpcao);
+						output += "\n Linha: " + to_string(idLinha_start) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
+
+						opcoes[sumTempos] = output;
+
+						nrOpcao++;
+					}
+					else
+					{
+						sumTempos += lLinhas[idLinha_finish].getTempos().at(z);
+						percurso += lLinhas[idLinha_finish].getParagens().at(z);
+						percurso += " -> ";
+					}
+				}
+			}
+		}
+		else
+		{
+			vector<string> inversoParagens = lLinhas[idLinha_start].getParagens();
+			reverse(inversoParagens.begin(), inversoParagens.end());
+			vector<unsigned int> inversoTempos = lLinhas[idLinha_start].getTempos();
+			reverse(inversoTempos.begin(), inversoTempos.end());
+
+			i1 = (inversoParagens.size() - 1) - i1;
+			i_s = (inversoParagens.size() - 1) - i_s;
+
+			for (size_t z = i1; z < i_s; z++)
+			{
+				if (z == i_s - 1)
+				{
+					sumTempos += inversoTempos.at(z);
+					percurso += inversoParagens.at(z);
+					percurso += " -> ";
+				}
+				else
+				{
+					sumTempos += inversoTempos.at(z);
+					percurso += inversoParagens.at(z);
+					percurso += " -> ";
+				}
+			}
+
+			//Viagem na linha finish
+			if (i_f > i2)
+			{
+				vector<string> inversoParagens = lLinhas[idLinha_finish].getParagens();
+				reverse(inversoParagens.begin(), inversoParagens.end());
+				vector<unsigned int> inversoTempos = lLinhas[idLinha_finish].getTempos();
+				reverse(inversoTempos.begin(), inversoTempos.end());
+
+				i2 = (inversoParagens.size() - 1) - i2;
+				i_f = (inversoParagens.size() - 1) - i_f;
+
+				for (size_t z = i_f; z < i2; z++)
+				{
+					if (z == i2 - 1)
+					{
+						sumTempos += inversoTempos.at(z);
+						percurso += inversoParagens.at(z);
+						percurso += " -> " + inversoParagens.at(z + 1);
+
+						string output = "\n Opção nº " + to_string(nrOpcao);
+						output += "\n Linha: " + to_string(idLinha_start) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
+
+						opcoes[sumTempos] = output;
+
+						nrOpcao++;
+					}
+					else
+					{
+						sumTempos += inversoTempos.at(z);
+						percurso += inversoParagens.at(z);
+						percurso += " -> ";
+					}
+				}
+			}
+			else
+			{
+				for (size_t z = i_f; z < i2; z++)
+				{
+					//Último elemento
+					if (z == i2 - 1)
+					{
+						sumTempos += lLinhas[idLinha_finish].getTempos().at(z);
+						percurso += lLinhas[idLinha_finish].getParagens().at(z);
+						percurso += " -> " + lLinhas[idLinha_finish].getParagens().at(z + 1);
+
+						string output = "\n Opção nº " + to_string(nrOpcao);
+						output += "\n Linha: " + to_string(idLinha_start) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
+
+						opcoes[sumTempos] = output;
+
+						nrOpcao++;
+					}
+					else
+					{
+						sumTempos += lLinhas[idLinha_finish].getTempos().at(z);
+						percurso += lLinhas[idLinha_finish].getParagens().at(z);
+						percurso += " -> ";
+					}
+				}
+			}
+
+		}
+	}
+
+	//Output
+	for (mapPercurso::iterator it = opcoes.begin(); it != opcoes.end(); it++)
+	{
+		cout << it->second;
 	}
 
 	_getch();

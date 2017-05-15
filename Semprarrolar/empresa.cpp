@@ -704,7 +704,7 @@ erro:
 
 	return;
 }
-void Empresa::removeLinha()
+void Empresa::removeLinha()	
 {
 	string input_id;
 	unsigned int l_id, contador = 0;
@@ -768,6 +768,29 @@ confirmation:
 	empresa.setLinhas(newLinhas);
 
 	alterado_linha = true;
+
+	//Retirar os turnos desta linha (agr inexistente) aos condutores
+	mapCondutor newCondutores = empresa.getCondutores();
+
+	//Para cada condutor
+	for (mapCondutor::iterator it = newCondutores.begin(); it != newCondutores.end(); it++)
+	{
+		//Trabalho do condutor
+		vector<Trabalho> t_temp = it->second.getTrabalho();
+
+		//Para cada trabalho do condutor
+		for (size_t i = 0; i < t_temp.size(); i++)
+		{
+			if (t_temp.at(i).getLinhaID() == l_id)
+			{
+				t_temp.erase(t_temp.begin() + i);
+			}
+		}
+
+		it->second.setTrabalho(t_temp);
+	}
+
+	empresa.setCondutores(newCondutores);
 
 	return;
 
@@ -1597,6 +1620,7 @@ paragem_final:
 
 	mapLinha lLinhas = empresa.getLinhas();
 
+	//As duas paragens estão na mesma paragem?
 	for (mapLinha::iterator i = lLinhas.begin(); i != lLinhas.end(); i++)
 	{
 		for (size_t y = 0; y < i->second.getParagens().size(); y++)

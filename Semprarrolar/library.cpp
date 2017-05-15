@@ -133,6 +133,8 @@ redo:
 				cout << "\n Ficheiro(s) não encontrado(s)\n";
 				_getch();
 
+				fail = false;
+
 				goto redo;
 			}
 
@@ -355,7 +357,7 @@ redo:
 
 		for (mapLinha::iterator it = lLinhas.begin(); it != lLinhas.end(); it++)
 		{
-			cout << it->second.getID() << endl;
+			cout << " " << it->second.getID() << endl;
 		}
 
 		cout << "\n Que linha pretende selecionar? ";

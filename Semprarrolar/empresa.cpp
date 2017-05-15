@@ -1725,8 +1725,6 @@ paragem_final:
 	//Automaticamente faz sort com base no tempo total
 	mapPercurso opcoes;
 
-	unsigned int nrOpcao = 1;
-
 	//Mesma linha
 	for (size_t i = 0; i < sameLine.size(); i++)
 	{
@@ -1748,18 +1746,10 @@ paragem_final:
 					sumTempos += lLinhas[idlinha].getTempos().at(z);
 					percurso += lLinhas[idlinha].getParagens().at(z);
 					percurso += " -> " + lLinhas[idlinha].getParagens().at(z + 1);
-
-					string output = "\n Opção nº " + nrOpcao;
-					output += "\n Linha: " + to_string(idlinha) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
+;
+					string output = "\n Linha: " + to_string(idlinha) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
 
 					opcoes[sumTempos] = output;
-
-					//cout << "\n Opção nº " << nrOpcao << endl;
-					//cout << " Linha: " << idlinha << endl;
-					//cout << " Percurso: " << percurso << endl;
-					//cout << " Tempo total: " << sumtempos << endl;
-
-					nrOpcao++;
 				}
 				else
 				{
@@ -1787,17 +1777,9 @@ paragem_final:
 					percurso += inversoParagens.at(z);
 					percurso += " -> " + inversoParagens.at(z + 1);
 
-					string output = "\n Opção nº " + nrOpcao;
-					output += "\n Linha: " + to_string(idlinha) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
+					string output = "\n Linha: " + to_string(idlinha) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
 
 					opcoes[sumTempos] = output;
-
-					//cout << "\n Opção nº " << nrOpcao << endl;
-					//cout << " Linha: " << idlinha << endl;
-					//cout << " Percurso: " << percurso << endl;
-					//cout << " Tempo total: " << sumtempos << endl;
-
-					nrOpcao++;
 				}
 				else
 				{
@@ -1862,12 +1844,9 @@ paragem_final:
 						percurso += inversoParagens.at(z);
 						percurso += " -> " + inversoParagens.at(z + 1);
 
-						string output = "\n Opção nº " + to_string(nrOpcao);
-						output += "\n Linha: " + to_string(idLinha_start) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
+						string output = "\n Linha: " + to_string(idLinha_start) + " e " + to_string(idLinha_finish) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
 
 						opcoes[sumTempos] = output;
-
-						nrOpcao++;
 					}
 					else
 					{
@@ -1888,12 +1867,10 @@ paragem_final:
 						percurso += lLinhas[idLinha_finish].getParagens().at(z);
 						percurso += " -> " + lLinhas[idLinha_finish].getParagens().at(z + 1);
 
-						string output = "\n Opção nº " + to_string(nrOpcao);
-						output += "\n Linha: " + to_string(idLinha_start) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
+						string output = "\n Linha: " + to_string(idLinha_start) + " e " + to_string(idLinha_finish) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
 
 						opcoes[sumTempos] = output;
 
-						nrOpcao++;
 					}
 					else
 					{
@@ -1949,12 +1926,10 @@ paragem_final:
 						percurso += inversoParagens.at(z);
 						percurso += " -> " + inversoParagens.at(z + 1);
 
-						string output = "\n Opção nº " + to_string(nrOpcao);
-						output += "\n Linha: " + to_string(idLinha_start) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
+						string output = "\n Linha: " + to_string(idLinha_start) + " e " + to_string(idLinha_finish) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
 
 						opcoes[sumTempos] = output;
 
-						nrOpcao++;
 					}
 					else
 					{
@@ -1975,12 +1950,10 @@ paragem_final:
 						percurso += lLinhas[idLinha_finish].getParagens().at(z);
 						percurso += " -> " + lLinhas[idLinha_finish].getParagens().at(z + 1);
 
-						string output = "\n Opção nº " + to_string(nrOpcao);
-						output += "\n Linha: " + to_string(idLinha_start) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
+						string output = "\n Linha: " + to_string(idLinha_start) + " e " + to_string(idLinha_finish) + "\n Percurso: " + percurso + "\n Tempo total: " + to_string(sumTempos) + "\n";
 
 						opcoes[sumTempos] = output;
 
-						nrOpcao++;
 					}
 					else
 					{

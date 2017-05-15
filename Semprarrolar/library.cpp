@@ -67,13 +67,13 @@ redo:
 						empresa.saveLinhas(filename_linha);
 					}
 
-					cout << " O programa fechou e guardou as alterações! ";
+					cout << "\n O programa fechou e guardou as alterações! ";
 					_getch();
 					return;
 				}
 				case 'N':
 				{
-					cout << " O programa fechou sem guardar as alterações! ";
+					cout << "\n O programa fechou sem guardar as alterações! ";
 					_getch();
 					return;
 				}
@@ -83,7 +83,7 @@ redo:
 			}
 			else
 			{
-				cout << " O programa fechou! ";
+				cout << "\n O programa fechou! ";
 				_getch();
 				return;
 			}

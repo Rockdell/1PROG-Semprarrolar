@@ -57,16 +57,24 @@ void Tempo::sumTempo(unsigned int m)
 		this->setHora(this->getHora() + 1);
 		this->setMinuto(this->getMinuto() - 60);
 	}
+
+	return;
 }
 void Tempo::subtractTempo(unsigned int m)
 {
-	this->setMinuto(this->getMinuto() - m);
+	int hora_temp = this->getHora();
+	int minuto_temp = this->getMinuto() - m;
 
-	while (this->getMinuto() < 0)
+	while (minuto_temp < 0)
 	{
-		this->setHora(this->getHora() - 1);
-		this->setMinuto(this->getMinuto() + 60);
+		hora_temp--;
+		minuto_temp += 60;
 	}
+
+	this->setHora(hora_temp);
+	this->setMinuto(minuto_temp);
+
+	return;
 }
 unsigned int Tempo::subtractTempo(Tempo t)
 {

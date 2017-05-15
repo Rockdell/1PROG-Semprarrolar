@@ -634,7 +634,7 @@ redo:
 //QoL methods
 bool compararCaseInsensitive(string strFirst, string strSecond)
 {
-	// Convert both strings to upper case by transfrom() before compare.
+	//Converte ambas as strings para uppercase antes de comparar
 	transform(strFirst.begin(), strFirst.end(), strFirst.begin(), toupper);
 	transform(strSecond.begin(), strSecond.end(), strSecond.begin(), toupper);
 

@@ -6,4 +6,4 @@ passageiros num conjunto de linhas (percursos). Através deste programa, é aind
 
 # Comentários finais
   
-  A nota final deste projeto foi 18.2. Trabalho realizado juntamente com [Rockdell](http://github.com/Rockdell)
+  A nota final deste projeto foi 18.2. Trabalho realizado juntamente com [Rockdell](http://github.com/Rockdell).
